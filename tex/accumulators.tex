@@ -2,14 +2,14 @@
 
 \subsection{Syntax \& Correctness}
 
-An accumulator is a compact representation of a set of elements and allows certain operations on the set.
+An accumulator\index{accumulator@Accumulator} is a compact representation of a set of elements and allows certain operations on the set.
 
 \begin{definition}[Accumulator]\label{def:accumulator}
-An accumulator that supports insertions of elements and membership proofs is also called an \emph{additive positive accumulator}~\cite{RSA:BalCanYak20}.
-It is a tuple of polynomial-time algorithms $(\algo{Gen}, \algo{Init}, \algo{Value}, \algo{Insert}, \algo{ProveMembership}, \algo{VerifyMembership})$ where:
+An accumulator\index{accumulator@Accumulator|textbf} that supports insertions of elements and membership proofs\index{accumulator@Accumulator!membership proof@membership proof|textbf} is also called an \emph{additive positive\index{accumulator@Accumulator!additive positive@additive positive|textbf} accumulator}~\cite{RSA:BalCanYak20}.
+It is a tuple of polynomial-time\index{algorithm@Algorithm!polynomialtime@polynomial-time} algorithms $(\algo{Gen}, \algo{Init}, \algo{Value}, \algo{Insert}, \algo{ProveMembership}, \algo{VerifyMembership})$ where:
 
 \begin{itemize}
-    \item $\algo{Gen}(1^\secpar) \rightarrow \params$ is a probabilistic algorithm that takes the security parameter as input and outputs public parameters $\params$ including the domain $\mathcal{X}_\mathsf{Acc}$ of elements that can be accumulated.
+    \item $\algo{Gen}(1^\secpar) \rightarrow \params$ is a probabilistic\index{algorithm@Algorithm!probabilistic@probabilistic} algorithm that takes the security parameter\index{security parameter@Security parameter} as input and outputs public parameters\index{public parameters@Public parameters} $\params$ including the domain $\mathcal{X}_\mathsf{Acc}$ of elements that can be accumulated.
     \item $\algo{Init}(\params) \rightarrow \state$ is a deterministic algorithm that takes public parameters $\params$ as input and outputs the initial state, $\state$, of the accumulator.
     \item $\algo{Value}(\params, \state) \rightarrow v$ is a deterministic algorithm that takes public parameters $\params$ and an accumulator state, $\state$, as input and outputs the accumulator value $v$.
     \item $\algo{Insert}(\params, \state, x) \rightarrow \state'$ is a deterministic algorithm that takes public parameters $\params$, an accumulator state, $\state$, and an element $x \in \mathcal{X}_\mathsf{Acc}$ as input and outputs a new state, $\state'$, after inserting $x$.
@@ -21,7 +21,7 @@ It is a tuple of polynomial-time algorithms $(\algo{Gen}, \algo{Init}, \algo{Val
 Typically, an accumulator involves two parties: the manager, who uses $\algo{Init}$, $\algo{Value}$, $\algo{Insert}$, $\algo{ProveMembership}$ and the verifier, who uses $\algo{VerifyMembership}$.
 
 \begin{example}
-  An example is the trivial accumulator\label{sec:trivial-acc}, where the accumulator value is simply the set itself and therefore grows linearly with the number of inserted elements.
+  An example is the trivial accumulator\index{accumulator@Accumulator!trivial@trivial|textbf}\label{sec:trivial-acc}, where the accumulator value is simply the set itself and therefore grows linearly with the number of inserted elements.
   (In contrast, non-trivial accumulators typically have constant-size accumulator values.)
   \begin{itemize}
     \item $\algo{Gen}(1^\secpar)\rightarrow \params$ where $\params = (\mathcal{X}_\mathsf{Acc} = \{0,1\}^*)$
@@ -33,7 +33,7 @@ Typically, an accumulator involves two parties: the manager, who uses $\algo{Ini
   \end{itemize}
 \end{example}
 
-\begin{definition}[Correctness]
+\begin{definition}[Correctness]\index{correctness@Correctness|textbf}
 An additive positive accumulator is considered \emph{correct} if, for any element that was inserted into the accumulator, the membership proof generated honestly for it is successfully verified.
 More formally, for all security parameters $\secpar$, all public parameters $\params \gets \algo{Gen}(1^\secpar)$, all positive integers $t$ polynomial in $\secpar$, all tuples $\vec{y} \in \mathcal{X}_\mathsf{Acc}^{t}$: for all $x \in \vec{y}$,
 \[
@@ -51,8 +51,8 @@ More formally, for all security parameters $\secpar$, all public parameters $\pa
 
 \subsection{Security}
 
-In $\Game~\algo{AccColl}$ (defined in \autoref{fig:break-acc-coll}), the adversary $\adv$ is given access to \emph{oracles}, which he can call, but not look inside.
-In other words, the adversary can insert elements into the accumulator and obtain membership proofs, but does not have access to the state directly.
+In $\Game~\algo{AccColl}$ (defined in \autoref{fig:break-acc-coll}), the adversary $\adv$ is given access to \emph{oracles\index{oracle@Oracle|textbf}}, which he can call, but not look inside.
+In other words, the adversary can insert elements into the accumulator\index{accumulator@Accumulator} and obtain membership proofs\index{accumulator@Accumulator!membership proof@membership proof}, but does not have access to the state directly.
 
 \begin{figure}[tbhp]
   \begin{center}
@@ -90,7 +90,7 @@ In other words, the adversary can insert elements into the accumulator and obtai
 \end{figure}
 
 \begin{definition}[Collision-Freeness]
-    An additive positive accumulator is \emph{collision-free} if it is hard to fabricate a membership proof for a value that is not in the set.
+    An additive positive\index{accumulator@Accumulator!additive positive@additive positive} accumulator is \emph{collision-free\index{collisionfreeness@Collision-freeness|textbf}} if it is hard to fabricate a membership proof for a value that is not in the set.
     More formally, an accumulator $\algo{Acc}$ is collision-free if for any \ppt algorithm $\adv$
     \[
       \advantage{Collision}{\adv, \algo{Acc}} \defeq \pr{\game{\algo{AccColl}}{\algo{Acc}} = 1} = \negl.
@@ -100,15 +100,15 @@ In other words, the adversary can insert elements into the accumulator and obtai
 \subsection{Exercises}
 
 \begin{exercise}
-  Is the trivial accumulator correct?
+  Is the trivial accumulator\index{accumulator@Accumulator}\index{accumulator@Accumulator!trivial@trivial} correct?
   Justify or prove it.
 \end{exercise}
 
 \ifsolutions
 \begin{mysolution}
-  \emph{Correctness (informal):} An accumulator is correct if for any element that has been inserted, we can generate a membership proof (using the current state) that will verify successfully against the current accumulator value.
+  \emph{Correctness\index{correctness@Correctness} (informal):} An accumulator\index{accumulator@Accumulator} is correct if for any element that has been inserted, we can generate a membership proof\index{accumulator@Accumulator!membership proof@membership proof} (using the current state) that will verify successfully against the current accumulator value.
   
-  \emph{Is the trivial accumulator correct?} Yes, the trivial accumulator is correct.
+  \emph{Is the trivial accumulator\index{accumulator@Accumulator!trivial@trivial} correct?} Yes, the trivial accumulator is correct.
   In the trivial accumulator:
   \begin{itemize}
     \item The accumulator value $v$ is just the state itself, which is the set of all inserted elements
@@ -122,15 +122,15 @@ In other words, the adversary can insert elements into the accumulator and obtai
 \fi
 
 \begin{exercise}
-  Is the trivial accumulator collision-free?
+  Is the trivial accumulator\index{accumulator@Accumulator}\index{accumulator@Accumulator!trivial@trivial} collision-free\index{collisionfreeness@Collision-freeness}?
   Justify or prove it.
 \end{exercise}
 
 \ifsolutions
 \begin{mysolution}
-  \emph{Collision-freeness (informal):} An accumulator is collision-free if it's computationally infeasible for an adversary to produce a valid membership proof for an element that was never inserted into the accumulator.
+  \emph{Collision-freeness\index{collisionfreeness@Collision-freeness} (informal):} An accumulator\index{accumulator@Accumulator} is collision-free if it's computationally infeasible for an adversary to produce a valid membership proof\index{accumulator@Accumulator!membership proof@membership proof} for an element that was never inserted into the accumulator.
   
-  \emph{Is the trivial accumulator collision-free?} Yes, the trivial accumulator is collision-free.
+  \emph{Is the trivial accumulator\index{accumulator@Accumulator!trivial@trivial} collision-free?} Yes, the trivial accumulator is collision-free.
   
   In the trivial accumulator, the accumulator value $v$ is exactly the set of all inserted elements.
   For $\algo{VerifyMembership}$ to accept, the element $x$ must be in this set.
@@ -141,59 +141,59 @@ In other words, the adversary can insert elements into the accumulator and obtai
 \fi
 
 \begin{exercise}
-  Using a collision-resistant hash function, give an example of an additive positive accumulator with constant-size accumulator values.
-  Argue that it is correct and collision-free.
+  Using a collision-resistant\index{collision resistance@Collision resistance} hash function\index{hash function@Hash function}, give an example of an additive positive\index{accumulator@Accumulator!additive positive@additive positive} accumulator\index{accumulator@Accumulator} with constant-size accumulator values.
+  Argue that it is correct and collision-free\index{collisionfreeness@Collision-freeness}.
 \end{exercise}
 
 \ifsolutions
 \begin{mysolution}
-  An example is a \emph{Merkle tree}.
-  The accumulator value is the root hash of a Merkle tree containing all inserted elements.
-  The membership proof for an element consists of the authentication path from the leaf to the root.
+  An example is a \emph{Merkle\index{merkle tree@Merkle tree} tree}.
+  The accumulator\index{accumulator@Accumulator} value is the root hash of a Merkle tree containing all inserted elements.
+  The membership proof\index{accumulator@Accumulator!membership proof@membership proof} for an element consists of the authentication path from the leaf to the root.
   
-  \emph{Correctness:} If an element was inserted, it appears as a leaf in the tree.
+  \emph{Correctness\index{correctness@Correctness}:} If an element was inserted, it appears as a leaf in the tree.
   The honestly generated authentication path will correctly hash up to the root, so verification succeeds.
   
-  \emph{Collision-freeness:} To forge a membership proof for an element that wasn't inserted, an adversary would need to provide an authentication path that hashes to the correct root.
-  This would mean finding a different set of sibling hashes that produce the same root hash, which would constitute a collision in the hash function.
-  Since the hash function is collision-resistant, this is infeasible.
+  \emph{Collision-freeness\index{collisionfreeness@Collision-freeness}:} To forge a membership proof for an element that wasn't inserted, an adversary would need to provide an authentication path that hashes to the correct root.
+  This would mean finding a different set of sibling hashes that produce the same root hash, which would constitute a collision in the hash function\index{hash function@Hash function}.
+  Since the hash function is collision-resistant\index{collision resistance@Collision resistance}, this is infeasible.
 \end{mysolution}
 \fi
 
 \begin{exercise}[Optional]
-  Using a collision-resistant hash function, give an example of an additive positive accumulator with constant-size accumulator values and logarithmic-size membership proofs.
-  Argue that it is correct and collision-free.
+  Using a collision-resistant\index{collision resistance@Collision resistance} hash function\index{hash function@Hash function}, give an example of an additive positive\index{accumulator@Accumulator!additive positive@additive positive} accumulator\index{accumulator@Accumulator} with constant-size accumulator values and logarithmic-size membership proofs\index{accumulator@Accumulator!membership proof@membership proof}.
+  Argue that it is correct and collision-free\index{collisionfreeness@Collision-freeness}.
 \end{exercise}
 
 \ifsolutions
 \begin{mysolution}
-  A Merkle tree achieves logarithmic-size proofs.
-  Elements are stored at the leaves of a balanced binary tree, and the accumulator value is the root hash.
-  The membership proof consists of the sibling hashes along the path from leaf to root, which has length $O(\log n)$ for $n$ elements.
+  A Merkle\index{merkle tree@Merkle tree} tree achieves logarithmic-size proofs.
+  Elements are stored at the leaves of a balanced binary tree, and the accumulator\index{accumulator@Accumulator} value is the root hash.
+  The membership proof\index{accumulator@Accumulator!membership proof@membership proof} consists of the sibling hashes along the path from leaf to root, which has length $O(\log n)$ for $n$ elements.
 
-  \emph{Correctness and Collision-freeness:} Same as the previous exercise.
+  \emph{Correctness\index{correctness@Correctness} and Collision-freeness\index{collisionfreeness@Collision-freeness}:} Same as the previous exercise.
 \end{mysolution}
 \fi
 
 \begin{exercise}
-  Define the syntax, correctness, and collision-freeness of an additive universal accumulator (i.e., an additive positive accumulator that supports non-membership proofs).
+  Define the syntax, correctness\index{correctness@Correctness}, and collision-freeness\index{collisionfreeness@Collision-freeness} of an additive universal accumulator\index{accumulator@Accumulator}\index{accumulator@Accumulator!universal@universal|textbf} (i.e., an additive positive\index{accumulator@Accumulator!additive positive@additive positive} accumulator that supports non-membership proofs\index{accumulator@Accumulator!membership proof@membership proof}).
 \end{exercise}
 
 \ifsolutions
 \begin{mysolution}
-  \emph{Syntax:} An additive universal accumulator is a tuple of polynomial-time algorithms 
+  \emph{Syntax:} An additive universal accumulator\index{accumulator@Accumulator}\index{accumulator@Accumulator!universal@universal} is a tuple of polynomial-time\index{algorithm@Algorithm!polynomialtime@polynomial-time} algorithms 
   \begin{align*}
     &(\algo{Gen}, \algo{Init}, \algo{Value}, \algo{Insert}, \algo{ProveMembership}, \algo{VerifyMembership},\\
     &\quad \algo{ProveNonMembership}, \algo{VerifyNonMembership}),
   \end{align*}
-  where the first six algorithms are as in the additive positive accumulator, and:
+  where the first six algorithms are as in the additive positive\index{accumulator@Accumulator!additive positive@additive positive} accumulator, and:
   \begin{itemize}
-    \item $\algo{ProveNonMembership}(\params, \state, x) \rightarrow \pi$ is a probabilistic algorithm that takes public parameters $\params$, an accumulator state, $\state$, and an element $x$ as input and outputs a non-membership proof $\pi$.
+    \item $\algo{ProveNonMembership}(\params, \state, x) \rightarrow \pi$ is a probabilistic\index{algorithm@Algorithm!probabilistic@probabilistic} algorithm that takes public parameters\index{public parameters@Public parameters} $\params$, an accumulator state, $\state$, and an element $x$ as input and outputs a non-membership proof\index{accumulator@Accumulator!membership proof@membership proof} $\pi$.
     \item $\algo{VerifyNonMembership}(\params, v, x, \pi) \rightarrow \{0, 1\}$ is a deterministic algorithm that takes public parameters $\params$, an accumulator value $v$, an element $x \in \mathcal{X}_\mathsf{Acc}$, and a proof $\pi$ as input and outputs $1$ (accept) if the proof validates that $x$ is not a member of the set represented by $v$, and outputs $0$ (reject) otherwise.
   \end{itemize}
   
-  \emph{Correctness:} An additive universal accumulator is \emph{correct} if both membership and non-membership proofs verify correctly.
-  Formally, for all security parameters $\secpar$, all public parameters $\params \gets \algo{Gen}(1^\secpar)$, all values $x \in \mathcal{X}_\mathsf{Acc}$, all positive integers $t$ polynomial in $\secpar$, all tuples $\vec{y} \in \mathcal{X}_\mathsf{Acc}^{t}$:
+  \emph{Correctness\index{correctness@Correctness}:} An additive universal accumulator is \emph{correct} if both membership and non-membership proofs verify correctly.
+  Formally, for all security parameters\index{security parameter@Security parameter} $\secpar$, all public parameters $\params \gets \algo{Gen}(1^\secpar)$, all values $x \in \mathcal{X}_\mathsf{Acc}$, all positive integers $t$ polynomial in $\secpar$, all tuples $\vec{y} \in \mathcal{X}_\mathsf{Acc}^{t}$:
   
   1. Membership correctness: For all $x \in \vec{y}$,
   \[
@@ -221,7 +221,7 @@ In other words, the adversary can insert elements into the accumulator and obtai
     \right] = 1 - \negl.
   \]
   
-  \emph{Collision-Freeness:} An additive universal accumulator is \emph{collision-free} if it's hard to fabricate either a membership proof for a non-member or a non-membership proof for a member.
+  \emph{Collision-Freeness\index{collisionfreeness@Collision-freeness}:} An additive universal accumulator is \emph{collision-free} if it's hard to fabricate either a membership proof for a non-member or a non-membership proof for a member.
   We extend the collision game from \autoref{fig:break-acc-coll} as follows:
   
   \begin{center}
@@ -252,19 +252,19 @@ In other words, the adversary can insert elements into the accumulator and obtai
 \fi
 
 \begin{exercise}[Optional]
-  Using a collision-resistant hash function, give an example of an additive universal accumulator with constant-size accumulator values and logarithmic-size membership and non-membership proofs.
-  Argue that it is correct and collision-free.
+  Using a collision-resistant\index{collision resistance@Collision resistance} hash function\index{hash function@Hash function}, give an example of an additive universal accumulator\index{accumulator@Accumulator}\index{accumulator@Accumulator!universal@universal} with constant-size accumulator values and logarithmic-size membership and non-membership proofs\index{accumulator@Accumulator!membership proof@membership proof}.
+  Argue that it is correct and collision-free\index{collisionfreeness@Collision-freeness}.
 \end{exercise}
 
 \ifsolutions
 \begin{mysolution}
-  We can construct a universal accumulator using a \emph{sparse Merkle tree}.
+  We can construct a universal accumulator\index{accumulator@Accumulator}\index{accumulator@Accumulator!universal@universal} using a \emph{sparse Merkle\index{merkle tree@Merkle tree} tree}.
   In a sparse Merkle tree, we have a fixed domain $\mathcal{X}_\mathsf{Acc} = \{0,1\}^\lambda$ and build a complete binary tree of depth $\lambda$.
   Each element $x \in \mathcal{X}_\mathsf{Acc}$ maps to a unique leaf position determined by interpreting $x$ as a binary path.
   
   \emph{Construction:}
   \begin{itemize}
-    \item $\algo{Gen}(1^\secpar)$: Output $\params = (\mathcal{X}_\mathsf{Acc} = \{0,1\}^\lambda, \algo{H})$ where $\algo{H}$ is a collision-resistant hash function.
+    \item $\algo{Gen}(1^\secpar)$: Output $\params = (\mathcal{X}_\mathsf{Acc} = \{0,1\}^\lambda, \algo{H})$ where $\algo{H}$ is a collision-resistant\index{collision resistance@Collision resistance} hash function\index{hash function@Hash function}.
     \item $\algo{Init}(\params)$: Initialize an empty sparse Merkle tree where all leaves have a default value $\bot$ (representing non-membership).
     \item $\algo{Value}(\params, \state)$: Return the root hash of the sparse Merkle tree.
     \item $\algo{Insert}(\params, \state, x)$: Set the leaf at position $x$ to a non-$\bot$ value (e.g., $\algo{H}(x)$) and update the tree.
@@ -275,15 +275,15 @@ In other words, the adversary can insert elements into the accumulator and obtai
   \end{itemize}
   
   \emph{Efficiency:} The accumulator value (root hash) has constant size.
-  Both membership and non-membership proofs consist of $\lambda$ sibling hashes along the path, giving logarithmic proof size.
+  Both membership and non-membership proofs\index{accumulator@Accumulator!membership proof@membership proof} consist of $\lambda$ sibling hashes along the path, giving logarithmic proof size.
   
-  \emph{Correctness:} 
+  \emph{Correctness\index{correctness@Correctness}:} 
   \begin{itemize}
     \item Membership: If $x$ was inserted, its leaf has a non-$\bot$ value, and the authentication path correctly verifies to the root.
     \item Non-membership: If $x$ was never inserted, its leaf remains $\bot$, and the authentication path proves this.
   \end{itemize}
   
-  \emph{Collision-freeness:} To forge a membership proof for a non-member (or vice versa), an adversary would need to provide an authentication path that:
+  \emph{Collision-freeness\index{collisionfreeness@Collision-freeness}:} To forge a membership proof for a non-member (or vice versa), an adversary would need to provide an authentication path that:
   \begin{itemize}
     \item Hashes to the correct root value
     \item Shows a different leaf value than what's actually stored
@@ -297,7 +297,7 @@ In other words, the adversary can insert elements into the accumulator and obtai
 
 \begin{exercise}[Optional]
   Read Section 2 of Baldimtsi, Canetti, and Yakoubov~\cite{RSA:BalCanYak20}.
-  Describe the notion of \emph{Strength} for accumulators.
+  Describe the notion of \emph{Strength} for accumulators\index{accumulator@Accumulator}.
 \end{exercise}
 
 \begin{exercise}[Optional]
@@ -314,7 +314,7 @@ In other words, the adversary can insert elements into the accumulator and obtai
 \end{exercise}
 
 \begin{exercise}[Optional]
-  Characterize the Utreexo Accumulator~\cite{add:bip-utreexo}.
+  Characterize the Utreexo\index{accumulator@Accumulator!utreexo@Utreexo} Accumulator~\cite{add:bip-utreexo}.
 \end{exercise}
 
 

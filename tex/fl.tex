@@ -2,10 +2,10 @@
 
 \subsection{Programmable Random Oracles}
 
-In the random oracle model, we can program the oracle to return specific values for certain inputs, as long as we maintain consistency and the correct distribution.
+In the random oracle\index{random oracle@Random oracle} model\index{random oracle model rom@Random oracle model (ROM)}, we can program\index{programmable random oracle@Programmable random oracle|textbf} the oracle to return specific values for certain inputs, as long as we maintain consistency and the correct distribution.
 
-For example, consider the hash commitment scheme $\algo{HashCom}[\algo{H}]$ where commitments are of the form $\algo{H}(m \| r)$.
-A reduction can program the oracle such that certain relations hold between committed messages, while maintaining the adversary's view.
+For example, consider the hash commitment\index{commitment scheme@Commitment scheme}\index{hash commitment@Hash commitment} scheme $\algo{HashCom}[\algo{H}]$ where commitments are of the form $\algo{H}(m \| r)$.
+A reduction\index{reduction@Reduction} can program the oracle such that certain relations hold between committed messages, while maintaining the adversary's view.
 
 The following proposition demonstrates the power of programming oracles by showing that despite a radical change in how commitments are generated, the games remain indistinguishable to any efficient adversary.
 Specifically, $\Game_1$ forces the XOR of committed messages to be equal to a message $m^*$ that is determined before even running the adversary.
@@ -18,7 +18,7 @@ If the adversary created $h'$ as $\algo{Commit}(m', r')$, then when the adversar
 \end{align*}
 Note that the challenger's commitment $h$ was given to the adversary before the adversary returned commitment $h'$ and the adversary has never revealed the opening $(m', r')$ to the challenger.
 
-A similar technique is used in the MuSig multi-signature scheme~\cite{DCC:MPSW19} to simulate signing queries (i.e., to answer signing queries without knowledge of the secret key, as explained in the next section).
+A similar technique is used in the MuSig\index{multisignature@Multi-signature!musig@MuSig} multi-signature\index{multisignature@Multi-signature} scheme\index{signature scheme@Signature scheme}~\cite{DCC:MPSW19} to simulate signing queries (i.e., to answer signing queries without knowledge of the secret key, as explained in the next section).
 
 \begin{figure}[h!]
   \begin{center}
@@ -74,19 +74,19 @@ The proof is left as an exercise (see \autoref{ex:prog-rom}).
 
 \subsection{The Forking Lemma}
 
-The forking lemma is a fundamental tool for analyzing algorithms that interact with random oracles.
+The forking lemma\index{forking lemma@Forking lemma} is a fundamental tool for analyzing algorithms that interact with random oracles\index{random oracle@Random oracle}.
 It considers an algorithm $\adv$ with oracle access to $\pcoracle{H}$, which is executed twice on different but related instances of the oracle:
 
 \begin{itemize}
   \item In the first execution, all random oracle responses are sampled uniformly as usual.
-  \item In the second execution, the responses are identical to those from the first execution except for a specific query called the \emph{forking point}, whose response is \emph{refreshed} (resampled with fresh randomness).
+  \item In the second execution, the responses are identical to those from the first execution except for a specific query called the \emph{forking point\index{forking lemma@Forking lemma!forking point@forking point|textbf}}, whose response is \emph{refreshed} (resampled with fresh randomness).
 \end{itemize}
 As a result, the two executions of $\adv$ proceed identically up to the forking point but may diverge afterwards.
 When $\adv$ succeeds, it outputs a tuple $(z, \mathit{aux})$, and the oracle query on input $z$ becomes the forking point.
 
 The forking lemma bounds the probability that $\adv$ succeeds in both executions and outputs the same value $z$, despite receiving different oracle responses for query $z$ in each execution.
 Even though it appears that $\adv$ can behave completely differently after receiving the refreshed oracle response, the forking lemma shows that $\adv$ frequently still outputs the same $z$ value.
-While the forking lemma appears very technical, it provides a powerful abstraction that we will invoke when proving the EUF-CMA security of Schnorr signatures (\autoref{thm:schnorr-euf-cma}).
+While the forking lemma appears very technical, it provides a powerful abstraction that we will invoke when proving the EUF-CMA\index{eufcma security@EUF-CMA security} security of Schnorr\index{schnorr signature@Schnorr signature} signatures (\autoref{thm:schnorr-euf-cma}).
 
 \begin{figure}[h!]
   \begin{center}
@@ -138,7 +138,7 @@ While the forking lemma appears very technical, it provides a powerful abstracti
   \caption{The Single and Fork games\label{fig:fork-games}}
 \end{figure}
 
-\begin{lemma}[Local Forking Lemma~\cite{AC:BelDaiLi19}]\label{lem:fork}
+\begin{lemma}[Local Forking Lemma\index{forking lemma@Forking lemma|textbf}\index{forking lemma@Forking lemma!local@local|textbf}~\cite{AC:BelDaiLi19}]\label{lem:fork}
   Let $q \geq 1$ be an integer and $\algo{InpGen}$ be a randomized algorithm that outputs some input $\mathit{inp}$.
   Let $\adv$ be a randomized algorithm that takes input $\mathit{inp}$ and randomness $\rho \in \mathcal{R}$, has oracle access to $\pcoracle{H}: \{0,1\}^* \rightarrow S$, makes at most $q$ queries to $\pcoracle{H}$, and returns either $\bot$ or a pair $(z, \mathit{aux})$ where $z \in \{0,1\}^*$ and $\mathit{aux}$ is auxiliary output.
   
@@ -164,22 +164,22 @@ While the forking lemma appears very technical, it provides a powerful abstracti
 \begin{mysolution}
   In both games:
   \begin{itemize}
-    \item The oracle $\pcoracle{H}$ behaves identically as a random oracle
-    \item The adversary receives a commitment $h$ and later the opening $(m, r)$
+    \item The oracle $\pcoracle{H}$ behaves identically as a random oracle\index{random oracle@Random oracle}
+    \item The adversary receives a commitment\index{commitment scheme@Commitment scheme} $h$ and later the opening $(m, r)$
     \item The games return the same bit $b$ output by the adversary
   \end{itemize}
   
   The key differences are:
   \begin{itemize}
     \item In $\Game_0$: $m$ and $r$ are chosen first, then $h = \pcoracle{H}(m \| r)$
-    \item In $\Game_1$: $h$ is chosen uniformly at random, then we program the oracle so that $\pcoracle{H}(m \| r) = h$
-    \item In $\Game_1$: If $h'$ is a valid hash commitment (i.e., $\exists (m', r')$ such that $\pcoracle{H}(m' \| r') = h'$), then $m \oplus m' = m^*$, where $m^*$ was determined before running $\adv$.
+    \item In $\Game_1$: $h$ is chosen uniformly at random, then we program\index{programmable random oracle@Programmable random oracle} the oracle so that $\pcoracle{H}(m \| r) = h$
+    \item In $\Game_1$: If $h'$ is a valid hash commitment\index{hash commitment@Hash commitment} (i.e., $\exists (m', r')$ such that $\pcoracle{H}(m' \| r') = h'$), then $m \oplus m' = m^*$, where $m^*$ was determined before running $\adv$.
   \end{itemize}
 \end{mysolution}
 \fi
 
 \begin{exercise}
-  Consider $\Game_F$ which is exactly like $\Game_1$ except that $m^* \defeq 0$ (instead of sampling uniformly). Give a \ppt adversary $\adv$ that makes one random oracle query and achieves
+  Consider $\Game_F$ which is exactly like $\Game_1$ except that $m^* \defeq 0$ (instead of sampling uniformly). Give a \ppt adversary $\adv$ that makes one random oracle\index{random oracle@Random oracle} query and achieves
   \[
     \left|\Pr[\game{\Game_0}{} = 1] - \Pr[\game{\Game_F}{} = 1]\right| = \frac{1}{2}.
   \]
@@ -227,18 +227,18 @@ While the forking lemma appears very technical, it provides a powerful abstracti
   We claim that $\Pr[\game{\Game_0}{} = 1 \wedge \neg E] = \Pr[\game{\Game_1}{} = 1 \wedge \neg E]$. To see this, we analyze the distribution of all values conditioned on $\neg E$:
   
   \begin{itemize}
-    \item \emph{The value $h$:} In $\Game_0$, $h = \pcoracle{H}(m \| r)$ where the oracle uses lazy sampling. Since $\neg E$ occurs, the adversary never queried $m \| r$ during the first invocation, so $h$ is a fresh uniform sample. In $\Game_1$, $h$ is explicitly drawn uniformly at random. Thus $h$ is uniform in $\{0,1\}^\secpar$ in both games.
+    \item \emph{The value $h$:} In $\Game_0$, $h = \pcoracle{H}(m \| r)$ where the oracle uses lazy sampling\index{lazy sampling@Lazy sampling}. Since $\neg E$ occurs, the adversary never queried $m \| r$ during the first invocation, so $h$ is a fresh uniform sample. In $\Game_1$, $h$ is explicitly drawn uniformly at random. Thus $h$ is uniform in $\{0,1\}^\secpar$ in both games.
     
     \item \emph{The value $r$:} In both games, $r$ is drawn uniformly from $\{0,1\}^\secpar$.
     
     \item \emph{The value $m$:} In $\Game_0$, $m$ is drawn uniformly from $\{0,1\}$. In $\Game_1$:
       \begin{itemize}
-        \item If $h'$ is a valid commitment: $m = m^* \oplus m'$ where $m^*$ is uniform in $\{0,1\}$ and independent of the adversary's view
+        \item If $h'$ is a valid commitment\index{commitment scheme@Commitment scheme}: $m = m^* \oplus m'$ where $m^*$ is uniform in $\{0,1\}$ and independent of the adversary's view
         \item If $h'$ is not a valid commitment: $m$ is drawn uniformly from $\{0,1\}$
       \end{itemize}
       In both cases, $m$ is uniform in $\{0,1\}$.
     
-    \item \emph{The oracle programming:} In $\Game_1$, we set $T[m \| r] = h$. Since $\neg E$ occurs, the input $m \| r$ is fresh (never queried before), so this programming is invisible to the adversary and maintains consistency with $h = \pcoracle{H}(m \| r)$.
+    \item \emph{The oracle programming\index{programmable random oracle@Programmable random oracle}:} In $\Game_1$, we set $T[m \| r] = h$. Since $\neg E$ occurs, the input $m \| r$ is fresh (never queried before), so this programming is invisible to the adversary and maintains consistency with $h = \pcoracle{H}(m \| r)$.
   \end{itemize}
   
   Since all values have identical distributions and the oracle behaves identically in both games (returning the same values for the same queries), the adversary's view is bit-by-bit identical conditioned on $\neg E$. Therefore $\Pr[\game{\Game_0}{} = 1 \wedge \neg E] = \Pr[\game{\Game_1}{} = 1 \wedge \neg E]$.
@@ -256,7 +256,7 @@ While the forking lemma appears very technical, it provides a powerful abstracti
   
   In both cases, for any specific query $x_i$ made by the adversary during the first invocation, the probability that $x_i = m \| r$ is at most $\frac{1}{2^\secpar}$ (the adversary must guess the $\secpar$-bit value $r$ correctly).
   
-  Since the adversary makes at most $q$ queries during the first invocation, by the union bound:
+  Since the adversary makes at most $q$ queries during the first invocation, by the union bound\index{union bound@Union bound}:
   \[
   \Pr[E] \leq \sum_{i=1}^q \Pr[x_i = m \| r] \leq \sum_{i=1}^q \frac{1}{2^\secpar} = \frac{q}{2^\secpar}
   \]
@@ -304,7 +304,7 @@ While the forking lemma appears very technical, it provides a powerful abstracti
   \begin{itemize}
     \item First execution: $\adv$ queries $z \gets \pcoracle{H}(\rho)$ and outputs $(z, \bot)$. Since $\rho$ is fixed, $z$ is determined by the oracle's response.
     \item We copy $T$ to $T'$, so $T'[\rho] = T[\rho] = z$
-    \item We then set $T'[z] \sample S$ (refreshing the value at the forking point)
+    \item We then set $T'[z] \sample S$ (refreshing the value at the forking point\index{forking lemma@Forking lemma!forking point@forking point})
     \item Second execution: $\adv$ queries $z' \gets \pcoracle{H'}(\rho) = T'[\rho] = z$ (unchanged) and outputs $(z', \bot) = (z, \bot)$
     \item The condition $z = z'$ is satisfied
     \item The condition $T[z] \neq T'[z]$ is satisfied with probability $1 - \frac{1}{|S|}$ (since $T'[z]$ was refreshed to a random value)
@@ -315,7 +315,7 @@ While the forking lemma appears very technical, it provides a powerful abstracti
   \advantage{Fork}{\adv, \algo{InpGen}} = 1 \cdot \left(1 - \frac{1}{|S|}\right) = 1 - \frac{1}{|S|}
   \]
   
-  This matches the forking lemma bound when $q = 1$ and $\advantage{Single}{\adv, \algo{InpGen}} = 1$:
+  This matches the forking lemma\index{forking lemma@Forking lemma} bound when $q = 1$ and $\advantage{Single}{\adv, \algo{InpGen}} = 1$:
   \[
   1 \cdot \left(\frac{1}{1} - \frac{1}{|S|}\right) = 1 - \frac{1}{|S|}
   \]
@@ -325,8 +325,8 @@ While the forking lemma appears very technical, it provides a powerful abstracti
 
 \begin{exercise}
   Let $\algo{InpGen}$ output $\mathit{inp} = (\GG,p,g)$ where $g$ is a generator of a cyclic group $\GG$ of prime order $p \geq 2^{\secpar-1}$.
-  Let $\adv$ be an algorithm that makes at most $q$ queries to a random oracle $\pcoracle{H}: \{0,1\}^* \rightarrow \ZZ_p$ and always succeeds in outputting $(z, s)$ such that $s = z + \pcoracle{H}(z) \cdot x \bmod p$ for some fixed $x \in \ZZ_p$.
-  Using the forking lemma, give a \ppt algorithm $\bdv$ that outputs $x$ and bound its success probability.
+  Let $\adv$ be an algorithm that makes at most $q$ queries to a random oracle\index{random oracle@Random oracle} $\pcoracle{H}: \{0,1\}^* \rightarrow \ZZ_p$ and always succeeds in outputting $(z, s)$ such that $s = z + \pcoracle{H}(z) \cdot x \bmod p$ for some fixed $x \in \ZZ_p$.
+  Using the forking lemma\index{forking lemma@Forking lemma}, give a \ppt algorithm $\bdv$ that outputs $x$ and bound its success probability.
 \end{exercise}
 
 \ifsolutions
@@ -346,7 +346,7 @@ While the forking lemma appears very technical, it provides a powerful abstracti
   x = (s - s') \cdot (T[z] - T'[z])^{-1} \bmod p
   \]
   
-  Since $\adv$ always succeeds, $\advantage{Single}{\adv, \algo{InpGen}} = 1$. By the forking lemma (noting that $S = \ZZ_p$ where $|S| = p \geq 2^{\secpar-1}$):
+  Since $\adv$ always succeeds, $\advantage{Single}{\adv, \algo{InpGen}} = 1$. By the forking lemma\index{forking lemma@Forking lemma} (noting that $S = \ZZ_p$ where $|S| = p \geq 2^{\secpar-1}$):
   \[
   \Pr[\bdv \text{ outputs } x] = \advantage{Fork}{\adv, \algo{InpGen}} \geq 1 \cdot \left(\frac{1}{q} - \frac{1}{|S|}\right) \geq \frac{1}{q} - \frac{1}{2^{\secpar-1}}
   \]
@@ -396,7 +396,7 @@ While the forking lemma appears very technical, it provides a powerful abstracti
 \end{exercise}
 
 \begin{exercise}[Optional]
-  Compare the Generalized Forking Lemma of Bellare and Neven~\cite{CCS:BelNev06} with the Local Forking Lemma.
+  Compare the Generalized Forking Lemma\index{forking lemma@Forking lemma}\index{forking lemma@Forking lemma!generalized@generalized} of Bellare and Neven~\cite{CCS:BelNev06} with the Local Forking Lemma\index{forking lemma@Forking lemma!local@local}.
   What are the key differences in their formulations and applications?
 \end{exercise}
 

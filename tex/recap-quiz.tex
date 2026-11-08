@@ -1,7 +1,7 @@
 \section{Recap Quiz}\label{sec:recap-quiz}
 
 \begin{exercise}
-  Let's say you have a game $\Game~G$ that you want to prove is hard, and you have the option to upper bound $\Pr[\game{G}{\adv} = 1]$ by $\advantage{AOMDL}{\bdv, \grgen}$, $\advantage{OMDL}{\cdv, \grgen}$, $\advantage{OMDL}{\ddv, \grgen}$ in the ROM, or $\advantage{DL}{\edv, \grgen}$.
+  Let's say you have a game $\Game~G$ that you want to prove is hard, and you have the option to upper bound $\Pr[\game{G}{\adv} = 1]$ by $\advantage{AOMDL}{\bdv, \grgen}$, $\advantage{OMDL}{\cdv, \grgen}$, $\advantage{OMDL}{\ddv, \grgen}$ in the ROM\index{random oracle model rom@Random oracle model (ROM)}, or $\advantage{DL}{\edv, \grgen}$.
   What is your order of preference?
   \begin{enumerate}
     \item $\advantage{DL}{\edv, \grgen}$, $\advantage{AOMDL}{\bdv, \grgen}$, $\advantage{OMDL}{\cdv, \grgen}$, $\advantage{OMDL}{\ddv, \grgen}$ in the ROM
@@ -18,7 +18,7 @@
 \fi
 
 \begin{exercise}
-  Consider the following game hop from $\game{\Game~\algo{Guess}}{}$ to $\game{\Game~\algo{Guess}_2}{}$:
+  Consider the following game hop\index{game@Game!game hopping@game hopping} from $\game{\Game~\algo{Guess}}{}$ to $\game{\Game~\algo{Guess}_2}{}$:
   
   \begin{figure}[h!]
     \begin{center}
@@ -48,7 +48,7 @@
 \ifsolutions
 \begin{mysolution}
   The answer is (1).
-  By the Difference Lemma (Lemma~\ref{lem:difference}), when the games are identical except when event $E$ occurs (here $E$ is ``$x = 0$''), the difference in success probabilities is bounded by $\Pr[E]$.
+  By the Difference Lemma\index{difference lemma@Difference lemma} (Lemma~\ref{lem:difference}), when the games are identical except when event $E$ occurs (here $E$ is ``$x = 0$''), the difference in success probabilities is bounded by $\Pr[E]$.
 \end{mysolution}
 \fi
 
@@ -79,7 +79,7 @@
 \fi
 
 \begin{exercise}
-  Let $\adv$ be an algorithm with access to a random oracle $\pcoracle{H}: \{0,1\}^* \to \{0,1\}^\secpar$.
+  Let $\adv$ be an algorithm with access to a random oracle\index{random oracle@Random oracle} $\pcoracle{H}: \{0,1\}^* \to \{0,1\}^\secpar$.
   The algorithm queries the random oracle exactly once with some $x \in \{0,1\}^\secpar$.
   What is $\Pr[\pcoracle{H}(x) = x]$?
   \begin{enumerate}
@@ -93,13 +93,13 @@
 \ifsolutions
 \begin{mysolution}
   The answer is (2).
-  The random oracle returns a uniformly random value from $\{0,1\}^\secpar$ on the first query to any input.
+  The random oracle\index{random oracle@Random oracle} returns a uniformly random value from $\{0,1\}^\secpar$ on the first query to any input.
   Since there are $2^\secpar$ possible outputs and exactly one of them equals $x$, we have $\Pr[\pcoracle{H}(x) = x] = 2^{-\secpar}$.
 \end{mysolution}
 \fi
 
 \begin{exercise}
-  Let $p$ be a prime and let $\adv$ be an algorithm with access to a random oracle $\pcoracle{H}: \{0,1\}^* \to \ZZ_p$.
+  Let $p$ be a prime and let $\adv$ be an algorithm with access to a random oracle\index{random oracle@Random oracle} $\pcoracle{H}: \{0,1\}^* \to \ZZ_p$.
   The adversary queries the random oracle exactly twice with distinct $x_1, x_2 \in \ZZ_p$ (in that order) and receives $y_1 = \pcoracle{H}(x_1)$, $y_2 = \pcoracle{H}(x_2)$.
   What is $\Pr[y_2 = x_1 y_1 x_2^{-1}]$?
   \begin{enumerate}
@@ -122,7 +122,7 @@
 
 \begin{exercise}
   Let $\gparam$ be a group description.
-  Let $\adv$ be an algorithm with access to a random oracle $\pcoracle{H}: \{0,1\}^* \to \ZZ_p$ where $p$ is prime.
+  Let $\adv$ be an algorithm with access to a random oracle\index{random oracle@Random oracle} $\pcoracle{H}: \{0,1\}^* \to \ZZ_p$ where $p$ is prime.
   The adversary queries the random oracle exactly twice with $(R_0, m_0)$ and $(R_1, m_1)$ where $R_i \in \GG$ and $m_i \in \{0,1\}^*$, receiving $y_0 = \pcoracle{H}(R_0, m_0)$ and $y_1 = \pcoracle{H}(R_1, m_1)$.
   What is $\Pr[R_0 \cdot g^{y_0} \cdot R_1^{-1} = g^{y_1}]$?
   \begin{enumerate}
@@ -146,13 +146,13 @@
   Note: If this event occurred, we would have $R_0 \cdot g^{\pcoracle{H}(R_0, m_0)} = R_1 \cdot g^{\pcoracle{H}(R_1, m_1)}$, meaning
   \[
     \algo{TapCom.Commit}(R_0, m_0) = \algo{TapCom.Commit}(R_1, m_1)
-  \] and the adversary would have won $\game{\Game~\algo{ComBind}}{\algo{TapCom}}$ in the random oracle model.
+  \] and the adversary would have won $\game{\Game~\algo{ComBind}}{\algo{TapCom}}$ in the random oracle\index{random oracle@Random oracle} model\index{random oracle model rom@Random oracle model (ROM)}.
   In \autoref{lem:taproot-binding}, we generalize this to $q$ random oracle queries.
 \end{mysolution}
 \fi
 
 \begin{exercise}
-  The following demonstrates how games in the random oracle model can examine the table $T$ of previous queries.
+  The following demonstrates how games in the random oracle\index{random oracle@Random oracle} model\index{random oracle model rom@Random oracle model (ROM)} can examine the table $T$ of previous queries.
   Let $\algo{H}$ be a random oracle mapping to $\{0,1\}^\secpar$ and let $\adv$ be an algorithm making at most $q_h$ queries to $\algo{H}$.
   Let $\game{\Game~G}{}$ be the game defined in Figure~\ref{fig:quiz-ro-game}.
   What is $\Pr[\game{G}{} = 1]$?
@@ -206,7 +206,7 @@
   So there are at most $q_h + 1$ total queries.
   For each query, the probability of colliding with any of the at most $q_h$ entries already in the table is at most $\frac{q_h}{2^\secpar}$.
   
-  By the union bound over all $q_h + 1$ queries:
+  By the union bound\index{union bound@Union bound} over all $q_h + 1$ queries:
   \[
     \Pr[\exists x' \neq x : \pcoracle{H}(x') = \pcoracle{H}(x)] \leq (q_h + 1) \cdot \frac{q_h}{2^\secpar}
   \]
@@ -219,10 +219,10 @@
   Which of the following represents a gap between security proofs and real-world security?
   \begin{enumerate}
     \item In practice, $\lambda$ is a fixed value (e.g., 128 or 256)
-    \item Concrete hash functions like SHA256 are not hash functions
-    \item Unfalsifiable assumptions cannot be validated experimentally
+    \item Concrete hash functions\index{hash function@Hash function} like SHA256 are not hash functions
+    \item Unfalsifiable\index{falsifiable assumption@Falsifiable assumption} assumptions cannot be validated experimentally
     \item Security models may not capture all attack vectors
-    \item Random oracles do not exist
+    \item Random oracles\index{random oracle@Random oracle} do not exist
     \item Security proofs don't model users writing keys on post-it notes
     \item All of the above
   \end{enumerate}

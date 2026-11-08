@@ -1,8 +1,8 @@
 \section{Reductions}
-We use \emph{reductions} to relate the hardness of winning various games.
+We use \emph{reductions\index{reduction@Reduction|textbf}} to relate the hardness of winning various games.
 To show that problem $Y$ is at least as hard as problem $X$, we construct a reduction: a \ppt algorithm that solves $X$ using any algorithm that solves $Y$ as a subroutine.
 This reduces problem $X$ to $Y$: if there were an efficient algorithm that solves $Y$, we would also have an efficient algorithm that solves $X$.
-By contrapositive, if there is no efficient solver for $X$, then there is no efficient solver for $Y$.\footnote{Equivalently, cryptographers sometimes say that the security of $Y$ reduces to the security of $X$.}
+By contrapositive\index{contraposition@Contraposition}, if there is no efficient solver for $X$, then there is no efficient solver for $Y$.\footnote{Equivalently, cryptographers sometimes say that the security of $Y$ reduces to the security of $X$.}
 
 We illustrate the concept of reductions through a series of examples.
 
@@ -26,22 +26,22 @@ We illustrate the concept of reductions through a series of examples.
 
 
 \begin{definition}
-  For $\game{\Game~\algo{PreimageEither}}{\algo{H}}$ as defined in \autoref{fig:break-hash-either} we define the advantage of $\adv$ as
+  For $\game{\Game~\algo{PreimageEither}}{\algo{H}}$ as defined in \autoref{fig:break-hash-either} we define the advantage\index{advantage@Advantage} of $\adv$ as
  \[
   \advantage{PreIE}{\adv, \algo{H}} \defeq \pr{\game{\algo{PreimageEither}}{\algo{H}} = 1}.
  \]
 \end{definition}
 
 \begin{proposition}
-  Let $\algo{H}$ be a hash function. If for all \ppt adversaries $\adv$, it holds that
+  Let $\algo{H}$ be a hash function\index{hash function@Hash function}. If for all \ppt adversaries $\adv$, it holds that
   \[
   \advantage{PreIE}{\adv, \algo{H}} = \negl
   \]
-  then $\algo{H}$ is preimage-resistant.
+  then $\algo{H}$ is preimage-resistant\index{preimage resistance@Preimage resistance}.
 \end{proposition}
 \begin{proof}
   We prove the contrapositive statement (which is equivalent to the statement in the proposition):
-  If $\algo{H}$ is not preimage-resistant, then there exists a \ppt algorithm $\bdv$ that wins\\ $\game{\Game~\algo{PreimageEither}}{\algo{H}}[\bdv]$ with non-negligible probability.
+  If $\algo{H}$ is not preimage-resistant, then there exists a \ppt algorithm $\bdv$ that wins\\ $\game{\Game~\algo{PreimageEither}}{\algo{H}}[\bdv]$ with non-negligible\index{negligible function@Negligible function} probability.
 
   If $\algo{H}$ is not preimage-resistant, then there exists a \ppt algorithm $\adv$ that wins $\game{\Game~\algo{Preimage}}{\algo{H}}$ with non-negligible probability.
   Let $\bdv^\adv_\algo{H}$ be the algorithm defined in \autoref{fig:break-hash-either-bdv}.
@@ -97,14 +97,14 @@ The proof is left as an exercise (see \autoref{ex:preimage-either-reverse}).
 \end{figure}
 
 \begin{definition}[Collision-resistance]
-  Hash function $\algo{H}$ is collision-resistant if for any \ppt algorithm $\adv$,
+  Hash function\index{hash function@Hash function} $\algo{H}$ is collision-resistant\index{collision resistance@Collision resistance|textbf} if for any \ppt algorithm $\adv$,
  \[
   \advantage{Coll}{\adv, \algo{H}} \defeq \pr{\game{\algo{Collision}}{\algo{H}} = 1} = \negl.
  \]
 \end{definition}
 
 \begin{theorem}[Collision-resistance implies preimage-resistance]\label{thm:collision-implies-preimage}
-  Let $\algo{H}$ be a collision-resistant hash function. Then $\algo{H}$ is preimage-resistant.
+  Let $\algo{H}$ be a collision-resistant hash function. Then $\algo{H}$ is preimage-resistant\index{preimage resistance@Preimage resistance}.
   More precisely, for any \ppt adversary $\adv$ against $\Game~\algo{Preimage}$ of $\algo{H}$, there exists a \ppt adversary $\bdv$ against $\Game~\algo{Collision}$ of $\algo{H}$ such that
     \[
     \advantage{PreI}{\adv, \algo{H}} \le \advantage{Coll}{\bdv^\adv_\algo{H}, \algo{H}} + 2^{-\secpar}.
@@ -119,13 +119,13 @@ The proof is left as an exercise (see \autoref{ex:collision-implies-preimage}).
 \begin{exercise}\label{ex:preimage-either-reverse}
   Prove \autoref{prop:preimage-either-reverse}.
   
-  \emph{Hint:} Construct a reduction that randomly places the challenge in either the first or second position.
+  \emph{Hint:} Construct a reduction\index{reduction@Reduction} that randomly places the challenge in either the first or second position.
 \end{exercise}
 
 \ifsolutions
 \begin{mysolution}
-  We prove the contrapositive statement:
-  If there exists a \ppt algorithm $\adv$ that wins $\game{\Game~\algo{PreimageEither}}{\algo{H}}$ with non-negligible probability, then $\algo{H}$ is not preimage-resistant.
+  We prove the contrapositive\index{contraposition@Contraposition} statement:
+  If there exists a \ppt algorithm $\adv$ that wins $\game{\Game~\algo{PreimageEither}}{\algo{H}}$ with non-negligible\index{negligible function@Negligible function} probability, then $\algo{H}$ is not preimage-resistant\index{preimage resistance@Preimage resistance}.
   Let $\bdv^\adv_\algo{H}$ be an algorithm that runs $\adv$ and returns its output:
 
   \begin{center}
@@ -146,7 +146,7 @@ The proof is left as an exercise (see \autoref{ex:collision-implies-preimage}).
   \end{center}
   
   Let $E_i$ denote the event that $\adv$ outputs a preimage of its $i$-th input ($i \in \{1, 2\}$).
-  By definition, $\advantage{PreIE}{\adv, \algo{H}} = \Pr[E_1 \vee E_2] \leq \Pr[E_1] + \Pr[E_2]$ (union bound; equality holds when $y_1 \neq y_2$).
+  By definition, $\advantage{PreIE}{\adv, \algo{H}} = \Pr[E_1 \vee E_2] \leq \Pr[E_1] + \Pr[E_2]$ (union bound\index{union bound@Union bound}; equality holds when $y_1 \neq y_2$).
   
   Since $x_1$ and $x_2$ are chosen uniformly and independently in the PreimageEither game (and thus $y_1$ and $y_2$ are independent samples from the image of $\algo{H}$), by symmetry: $\Pr[E_1] = \Pr[E_2]$.
   
@@ -162,15 +162,15 @@ The proof is left as an exercise (see \autoref{ex:collision-implies-preimage}).
 \fi
 
 \begin{exercise}\label{ex:collision-implies-preimage}
-  Prove \autoref{thm:collision-implies-preimage} (collision-resistance implies preimage-resistance).
+  Prove \autoref{thm:collision-implies-preimage} (collision-resistance\index{collision resistance@Collision resistance} implies preimage-resistance\index{preimage resistance@Preimage resistance}).
   
-  \emph{Hint:} Construct a reduction that samples a random $x$, computes $y = \algo{H.Eval}(\kappa, x)$, and uses the preimage-finding adversary to find $x'$ such that $\algo{H.Eval}(\kappa, x') = y$. What is the probability that $x = x'$?
+  \emph{Hint:} Construct a reduction\index{reduction@Reduction} that samples a random $x$, computes $y = \algo{H.Eval}(\kappa, x)$, and uses the preimage-finding adversary to find $x'$ such that $\algo{H.Eval}(\kappa, x') = y$. What is the probability that $x = x'$?
 \end{exercise}
 
 \ifsolutions
 \begin{mysolution}
-  We prove the contrapositive statement:
-  If $\algo{H}$ is not preimage-resistant, then there exists a \ppt algorithm $\adv$ that wins $\game{\Game~\algo{Preimage}}{\algo{H}}$ with non-negligible probability.
+  We prove the contrapositive\index{contraposition@Contraposition} statement:
+  If $\algo{H}$ is not preimage-resistant\index{preimage resistance@Preimage resistance}, then there exists a \ppt algorithm $\adv$ that wins $\game{\Game~\algo{Preimage}}{\algo{H}}$ with non-negligible\index{negligible function@Negligible function} probability.
   Let $\bdv^\adv_\algo{H}$ be an algorithm that runs $\adv$ and returns its output:
   
   \begin{center}
@@ -193,7 +193,7 @@ The proof is left as an exercise (see \autoref{ex:collision-implies-preimage}).
   \pr{\game{Collision}{\algo{H}} = 0} &= \pr{\game{Preimage}{\algo{H}} = 0 \vee \bdv \text{ aborts at line 4} } \\
   &\le \pr{\game{Preimage}{\algo{H}} = 0} + \pr{\bdv \text{ aborts at line 4} } \\
   \end{align*}
-  using union bound.
+  using union bound\index{union bound@Union bound}.
   Then, by the definition of $\advantage{Coll}{\bdv, \algo{H}}$ and $\advantage{PreI}{\adv, \algo{H}}$ we have
   \begin{align*}
     1 - \advantage{Coll}{\bdv, \algo{H}} &\le 1 - \advantage{PreI}{\adv, \algo{H}} + \pr{\bdv \text{ aborts at line 4} }\\
@@ -225,22 +225,22 @@ The proof is left as an exercise (see \autoref{ex:collision-implies-preimage}).
   which is negligible.
   
   Since $\advantage{PreI}{\adv, \algo{H}}$ is not negligible and $\pr{\bdv \text{ aborts}} = \negl$, by \cref{lem:negl}, $\advantage{Coll}{\bdv, \algo{H}}$ is not negligible.
-  Since $\bdv$ is \ppt, $\algo{H}$ is not collision-resistant.
+  Since $\bdv$ is \ppt, $\algo{H}$ is not collision-resistant\index{collision resistance@Collision resistance}.
 \end{mysolution}
 \fi
 
 \begin{exercise}[Optional]
-  Describe target collision resistance, extended target collision resistance, and multi-target collision resistance~\cite{PKC:HulRijSon16} in your own words and discuss their security against classical and quantum attacks (see Table 1 in the referenced paper).
+  Describe target collision resistance\index{collision resistance@Collision resistance}, extended target collision resistance, and multi-target collision resistance~\cite{PKC:HulRijSon16} in your own words and discuss their security against classical and quantum\index{postquantum security@Post-quantum security} attacks (see Table 1 in the referenced paper).
 \end{exercise}
 
 \begin{exercise}[Optional]
-  Drijvers et al.~\cite{SP:DEFKLN19} give a \emph{metareduction} showing that MuSig(1)~\cite{DCC:MPSW19} without the first nonce-commitment round cannot be proven secure under the one-more discrete logarithm (OMDL) assumption.
+  Drijvers et al.~\cite{SP:DEFKLN19} give a \emph{metareduction\index{metareduction@Metareduction}} showing that MuSig\index{multisignature@Multi-signature!musig@MuSig}(1)~\cite{DCC:MPSW19} without the first nonce-commitment\index{commitment scheme@Commitment scheme} round cannot be proven secure under the one-more discrete logarithm\index{discrete logarithm dl@Discrete logarithm (DL)}\index{onemore discrete logarithm omdl@One-more discrete logarithm (OMDL)} (OMDL) assumption.
   Interpret Theorem 1 and Figure 2 in their paper.
-  Complete the following informal statement: If there exists an algorithm $\bdv$ that reduces $n$-OMDL to the EUF-CMA security of the MuSig(1) variant, then there exists a reduction $\mdv$ and a forger $\mathcal{F}$ that solve the \underline{\hspace{3cm}} problem.
+  Complete the following informal statement: If there exists an algorithm $\bdv$ that reduces\index{reduction@Reduction} $n$-OMDL to the EUF-CMA\index{eufcma security@EUF-CMA security} security of the MuSig(1) variant, then there exists a reduction $\mdv$ and a forger $\mathcal{F}$ that solve the \underline{\hspace{3cm}} problem.
 \end{exercise}
 
 \ifsolutions
 \begin{mysolution}
-  $(n + k)$-OMDL
+  $(n + k)$-OMDL\index{onemore discrete logarithm omdl@One-more discrete logarithm (OMDL)}
 \end{mysolution}
 \fi

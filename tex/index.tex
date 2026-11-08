@@ -1,0 +1,29 @@
+\clearpage
+\section{Index}\label{sec:index}
+
+This index lists the main terms of the workbook and the pages that mention them.
+A page number in \textbf{bold} shows where the term is defined.
+The page numbers are links.
+
+% Layout of the index. This replaces the theindex environment of llncs,
+% which starts a new page with a chapter heading.
+\makeatletter
+\renewenvironment{theindex}{%
+  \begin{multicols}{2}%
+  \small
+  \setlength{\parindent}{0pt}%
+  \setlength{\parskip}{0pt plus 0.3pt}%
+  \raggedright
+  \renewcommand\item{\par\hangindent=2em\hangafter=1\relax}%
+  \renewcommand\subitem{\par\nopagebreak\hangindent=3em\hangafter=1\hspace*{1em}}%
+  \renewcommand\indexspace{\par\vspace{0.5\baselineskip}}%
+}{%
+  \end{multicols}%
+}
+\makeatother
+% Letter heading before each group (written by makeindex, see index.ist).
+\NewDocumentCommand\indexgroup{m}{%
+  \par\pagebreak[2]\vspace{0.7\baselineskip}%
+  {\normalsize\bfseries #1}\par\nopagebreak\vspace{0.2\baselineskip}}
+
+\printindex

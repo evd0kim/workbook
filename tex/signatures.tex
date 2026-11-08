@@ -3,9 +3,9 @@
 \subsection{Syntax \& Correctness}
 
 \begin{definition}[Signature Scheme]
-  A signature scheme $\algo{Sig}$ is a tuple of polynomial-time algorithms $(\algo{Setup}, \algo{KeyGen}, \algo{Sign}, \algo{Verify})$ where:
+  A signature scheme\index{signature scheme@Signature scheme|textbf} $\algo{Sig}$ is a tuple of polynomial-time\index{algorithm@Algorithm!polynomialtime@polynomial-time} algorithms $(\algo{Setup}, \algo{KeyGen}, \algo{Sign}, \algo{Verify})$ where:
   \begin{itemize}
-    \item $\algo{Setup}(1^\secpar) \rightarrow \params$ is a probabilistic algorithm that takes the security parameter as input and outputs public parameters $\params$ including the message space $\mathcal{M}$ and the signature space $\mathcal{S}$.
+    \item $\algo{Setup}(1^\secpar) \rightarrow \params$ is a probabilistic\index{algorithm@Algorithm!probabilistic@probabilistic} algorithm that takes the security parameter\index{security parameter@Security parameter} as input and outputs public parameters\index{public parameters@Public parameters} $\params$ including the message space $\mathcal{M}$ and the signature space $\mathcal{S}$.
     \item $\algo{KeyGen}(\params) \rightarrow (\sk, \pk)$ is a probabilistic algorithm that takes public parameters $\params$ as input and outputs a secret key $\sk$ and a public key $\pk$.
     \item $\algo{Sign}(\params, \sk, m) \rightarrow \sigma$ is a probabilistic algorithm that takes public parameters $\params$, a secret key $\sk$, and a message $m \in \mathcal{M}$ as input and outputs a signature $\sigma \in \mathcal{S}$.
     \item $\algo{Verify}(\params, \pk, m, \sigma) \rightarrow \{0, 1\}$ is a deterministic algorithm that takes public parameters $\params$, a public key $\pk$, a message $m \in \mathcal{M}$, and a signature $\sigma \in \mathcal{S}$ as input and outputs $1$ (accept) if the signature is valid, and outputs $0$ (reject) otherwise.
@@ -13,7 +13,7 @@
 \end{definition}
 
 \begin{definition}[Correctness]\label{def:sig-correctness}
-  A signature scheme $\algo{Sig} = (\algo{Setup}, \algo{KeyGen}, \algo{Sign}, \algo{Verify})$ is \emph{perfectly correct} if for all $\secpar \in \NN$ and all messages $m \in \mathcal{M}$:
+  A signature scheme $\algo{Sig} = (\algo{Setup}, \algo{KeyGen}, \algo{Sign}, \algo{Verify})$ is \emph{perfectly correct\index{correctness@Correctness|textbf}} if for all $\secpar \in \NN$ and all messages $m \in \mathcal{M}$:
   \[
     \Pr\left[\algo{Verify}(\params, \pk, m, \sigma) = 1 \;\middle|\; \begin{array}{l}
       \params \gets \algo{Setup}(1^\secpar) \\
@@ -27,11 +27,11 @@ In other words, a signature scheme is correct if honestly generated signatures a
 
 \subsection{Security}
 
-The standard security notion for digital signatures is existential unforgeability under chosen message attack (EUF-CMA).
-Unlike one-time signatures, the adversary can request signatures on multiple messages.
+The standard security notion for digital signatures\index{signature scheme@Signature scheme} is existential unforgeability\index{eufcma security@EUF-CMA security} under chosen message attack (EUF-CMA).
+Unlike one-time signatures\index{onetime signature@One-time signature}, the adversary can request signatures on multiple messages.
 
 \begin{definition}[EUF-CMA Security]\label{def:euf-cma}
-  A signature scheme $\algo{Sig}$ is \emph{existentially unforgeable under chosen message attack (EUF-CMA)} if for all \ppt adversaries $\adv$:
+  A signature scheme $\algo{Sig}$ is \emph{existentially unforgeable\index{eufcma security@EUF-CMA security|textbf} under chosen message attack (EUF-CMA)} if for all \ppt adversaries $\adv$:
   \[
     \advantage{EUF-CMA}{\adv, \algo{Sig}} \defeq \pr{\game{\Game~\algo{EUF-CMA}}{\algo{Sig}} = 1} = \negl
   \]
@@ -64,7 +64,7 @@ Unlike one-time signatures, the adversary can request signatures on multiple mes
 \subsection{Schnorr Signatures}
 
 \begin{definition}[Schnorr Signature Scheme]\label{def:schnorr}
-  Let $\grgen$ be a group generation algorithm and $\algo{H}$ be a hash function with output space $\ZZ_p$. The Schnorr signature scheme $\algo{SchnorrSig}[\grgen, \algo{H}]$ is defined as follows:
+  Let $\grgen$ be a group generation\index{group generation algorithm@Group generation algorithm} algorithm and $\algo{H}$ be a hash function\index{hash function@Hash function} with output space $\ZZ_p$. The Schnorr\index{schnorr signature@Schnorr signature|textbf} signature scheme\index{signature scheme@Signature scheme} $\algo{SchnorrSig}[\grgen, \algo{H}]$ is defined as follows:
   \begin{itemize}
     \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Run $\gparam \gets \grgen(1^\secpar)$ and $\kappa \gets \algo{H.Gen}(1^\secpar)$. The message space is $\mathcal{M} = \{0,1\}^*$ and the signature space is $\mathcal{S} = \GG \times \ZZ_p$. Output $\params = (\gparam, \kappa, \mathcal{M}, \mathcal{S})$.
     
@@ -86,7 +86,7 @@ Unlike one-time signatures, the adversary can request signatures on multiple mes
 \end{definition}
 
 \begin{lemma}[Correctness of Schnorr Signatures]\label{lem:schnorr-correctness}
-  The Schnorr signature scheme\\ $\algo{SchnorrSig}[\grgen, \algo{H}]$ is perfectly correct.
+  The Schnorr signature scheme\\ $\algo{SchnorrSig}[\grgen, \algo{H}]$ is perfectly correct\index{correctness@Correctness}.
 \end{lemma}
 
 \begin{proof}
@@ -101,7 +101,7 @@ Unlike one-time signatures, the adversary can request signatures on multiple mes
 \end{proof}
 
 \begin{remark}
-  In the security analysis that follows, we work in the Random Oracle Model where the hash function $\algo{H.Eval}(\kappa, \cdot)$ is modeled as a truly random function.
+  In the security analysis that follows, we work in the Random Oracle\index{random oracle@Random oracle} Model\index{random oracle model rom@Random oracle model (ROM)} where the hash function $\algo{H.Eval}(\kappa, \cdot)$ is modeled as a truly random function.
   In the ROM analysis, we write $\algo{H}(\cdot)$ instead of $\algo{H.Eval}(\kappa, \cdot)$, with the understanding that $\algo{H}$ represents a random oracle.
 \end{remark}
 
@@ -206,7 +206,7 @@ Unlike one-time signatures, the adversary can request signatures on multiple mes
 \end{figure}
 
 \begin{lemma}\label{lem:schnorr-to-single}
-  Let $\adv$ be an adversary against the EUF-CMA security of $\algo{SchnorrSig}[\grgen, \algo{H}]$ in the random oracle model for $\algo{H}$ making at most $q_s$ queries to $\pcoracle{Sign}$ and at most $q_h$ queries to $\algo{H}$.
+  Let $\adv$ be an adversary against the EUF-CMA\index{eufcma security@EUF-CMA security} security of $\algo{SchnorrSig}[\grgen, \algo{H}]$ in the random oracle model for $\algo{H}$ making at most $q_s$ queries to $\pcoracle{Sign}$ and at most $q_h$ queries to $\algo{H}$.
 
   Let $\algo{InpGen}$ be the algorithm which on input $1^\secpar$ runs $(\GG, p, g) \gets \grgen(1^\secpar)$, draws $X \sample \GG$, and returns $((\GG, p, g), X)$.
 
@@ -214,7 +214,7 @@ Unlike one-time signatures, the adversary can request signatures on multiple mes
   \[
     \left|\advantage{Single}{\cdv, \algo{InpGen}} - \advantage{EUF-CMA}{\adv, \algo{SchnorrSig}[\grgen, \algo{H}]}\right| \leq \frac{q_s(q_s + q_h)}{2^{\secpar-1}}
   \]
-  with $\advantage{Single}{\cdv, \algo{InpGen}}$ as defined in the forking lemma (\autoref{lem:fork}).
+  with $\advantage{Single}{\cdv, \algo{InpGen}}$ as defined in the forking lemma\index{forking lemma@Forking lemma} (\autoref{lem:fork}).
 
   Moreover, when $\cdv$ succeeds (returns $(z, \mathit{aux})$ for some $(z, \mathit{aux})$), then $z = (R^*, m^*)$, $\mathit{aux} = s^*$, and
   \[
@@ -225,9 +225,9 @@ Unlike one-time signatures, the adversary can request signatures on multiple mes
 The proof is left as an exercise (see \autoref{ex:schnorr-to-single}).
 
 \begin{theorem}[Schnorr signatures are EUF-CMA secure]\label{thm:schnorr-euf-cma}
-  Let $\grgen$ be a group generation algorithm for which the discrete logarithm problem is hard and let $\algo{H}$ be a hash function with output space $\ZZ_p$.
+  Let $\grgen$ be a group generation algorithm for which the discrete logarithm\index{discrete logarithm dl@Discrete logarithm (DL)} problem is hard and let $\algo{H}$ be a hash function with output space $\ZZ_p$.
   Then the Schnorr signature scheme $\algo{SchnorrSig}[\grgen, \algo{H}]$ is EUF-CMA secure in the random oracle model for $\algo{H}$.
-  More precisely, for any \ppt adversary $\adv$ against the EUF-CMA security of $\algo{SchnorrSig}[\grgen, \algo{H}]$ making at most $q_s$ queries to the signing oracle and at most $q_h$ queries to the random oracle $\algo{H}$,
+  More precisely, for any \ppt adversary $\adv$ against the EUF-CMA security of $\algo{SchnorrSig}[\grgen, \algo{H}]$ making at most $q_s$ queries to the signing oracle\index{oracle@Oracle!signing oracle@signing oracle} and at most $q_h$ queries to the random oracle $\algo{H}$,
   there exists a \ppt adversary $\ddv$ against the discrete logarithm problem such that
   \[
     \advantage{EUF-CMA}{\adv, \algo{SchnorrSig}[\grgen, \algo{H}]} \leq \frac{q_s(q_s + q_h)}{2^{\secpar-1}} + \sqrt{(q_h + 1) \left(\advantage{DLog}{\ddv, \grgen} + \frac{1}{2^{\secpar-1}}\right)}.
@@ -239,12 +239,12 @@ The proof is left as an exercise (see \autoref{ex:schnorr-euf-cma}).
 \subsection{Exercises}
 
 \begin{exercise}
-  The EUF-CMA security definition in \autoref{def:euf-cma} only requires the forged message to be new. An alternative notion called \emph{strong EUF-CMA} would allow the adversary to win if they produce a different signature for a message even if it was previously queried. Define a strong EUF-CMA security game that captures this intuition.
+  The EUF-CMA\index{eufcma security@EUF-CMA security} security definition in \autoref{def:euf-cma} only requires the forged message to be new. An alternative notion called \emph{strong EUF-CMA\index{eufcma security@EUF-CMA security!strong@strong|textbf}} would allow the adversary to win if they produce a different signature for a message even if it was previously queried. Define a strong EUF-CMA security game that captures this intuition.
 \end{exercise}
 
 \ifsolutions
 \begin{mysolution}
-  For strong EUF-CMA security, we modify the signing oracle to maintain a set of message-signature pairs:
+  For strong EUF-CMA\index{eufcma security@EUF-CMA security}\index{eufcma security@EUF-CMA security!strong@strong} security, we modify the signing oracle\index{oracle@Oracle!signing oracle@signing oracle} to maintain a set of message-signature pairs:
   \begin{itemize}
     \item Initialize $\mathcal{Q} \defeq \emptyset$
     \item In oracle $\pcoracle{Sign}(m)$: compute $\sigma \gets \algo{Sign}(\params, \sk, m)$, set $\mathcal{Q} \defeq \mathcal{Q} \cup \{(m, \sigma)\}$, and return $\sigma$
@@ -257,16 +257,16 @@ The proof is left as an exercise (see \autoref{ex:schnorr-euf-cma}).
 
 
 \begin{exercise}
-  In the Generic Group Model (GGM)~\cite{EC:Shoup97}, the advantage of solving the discrete logarithm problem with $q$ group operations is bounded by $\advantage{DLog}{\adv, \grgen} \leq \frac{q^2}{2p}$ where $p$ is the prime group order.
+  In the Generic Group Model\index{generic group model ggm@Generic group model (GGM)} (GGM)~\cite{EC:Shoup97}, the advantage\index{advantage@Advantage} of solving the discrete logarithm\index{discrete logarithm dl@Discrete logarithm (DL)} problem with $q$ group operations is bounded by $\advantage{DLog}{\adv, \grgen} \leq \frac{q^2}{2p}$ where $p$ is the prime group order.
   
-  Consider Schnorr signatures over a 256-bit elliptic curve group (e.g., secp256k1 where $p > 2^{255}$). Suppose an adversary can make:
+  Consider Schnorr\index{schnorr signature@Schnorr signature} signatures over a 256-bit elliptic curve group (e.g., secp256k1 where $p > 2^{255}$). Suppose an adversary can make:
   \begin{itemize}
     \item $q_s = 2^{10}$ signing queries
     \item $q_h = 2^{85}$ hash queries
     \item $q = 2^{85}$ group operations
   \end{itemize}
   
-  Calculate the concrete EUF-CMA advantage using the bound from \autoref{thm:schnorr-euf-cma} with $\secpar = 256$, and compare it to the discrete logarithm advantage $\advantage{DLog}{\adv, \grgen}$ in the GGM.
+  Calculate the concrete EUF-CMA\index{eufcma security@EUF-CMA security} advantage using the bound from \autoref{thm:schnorr-euf-cma} with $\secpar = 256$, and compare it to the discrete logarithm advantage $\advantage{DLog}{\adv, \grgen}$ in the GGM.
 \end{exercise}
 
 \ifsolutions
@@ -276,12 +276,12 @@ The proof is left as an exercise (see \autoref{ex:schnorr-euf-cma}).
     \advantage{EUF-CMA}{\adv, \algo{SchnorrSig}} \leq \frac{q_s(q_s + q_h)}{2^{\secpar-1}} + \sqrt{(q_h + 1) \left(\advantage{DLog}{\ddv, \grgen} + \frac{1}{2^{\secpar-1}}\right)}
   \]
   
-  First, let's calculate the discrete logarithm advantage in the GGM:
+  First, let's calculate the discrete logarithm\index{discrete logarithm dl@Discrete logarithm (DL)} advantage\index{advantage@Advantage} in the GGM\index{generic group model ggm@Generic group model (GGM)}:
   \[
     \advantage{DLog}{\adv, \grgen} \leq \frac{q^2}{2p} = \frac{(2^{85})^2}{2^{257}} = \frac{2^{170}}{2^{257}} = 2^{-87}
   \]
   
-  Now for the EUF-CMA advantage. First term:
+  Now for the EUF-CMA\index{eufcma security@EUF-CMA security} advantage. First term:
   \[
     \frac{q_s(q_s + q_h)}{2^{\secpar-1}} \approx \frac{2^{10} \cdot 2^{85}}{2^{255}} = \frac{2^{95}}{2^{255}} = 2^{-160}
   \]
@@ -296,11 +296,11 @@ The proof is left as an exercise (see \autoref{ex:schnorr-euf-cma}).
     \advantage{EUF-CMA}{\adv, \algo{SchnorrSig}} \leq 2^{-160} + 0.5 \approx 0.5
   \]
   
-  \emph{Comparison:} The discrete logarithm advantage is $2^{-87}$, while the EUF-CMA advantage for Schnorr signatures is approximately $2^{-1}$.
+  \emph{Comparison:} The discrete logarithm advantage is $2^{-87}$, while the EUF-CMA advantage for Schnorr\index{schnorr signature@Schnorr signature} signatures is approximately $2^{-1}$.
   
-  This dramatic difference—losing over 86 bits of security—is due to the square root loss in the forking lemma. 
+  This dramatic difference—losing over 86 bits of security—is due to the square root loss in the forking lemma\index{forking lemma@Forking lemma}. 
   
-  \emph{Remark:} In the Algebraic Group Model (AGM)~\cite{C:FucKilLos18}, Schnorr signatures can be proven secure with a much tighter reduction. The AGM assumes that whenever an adversary outputs a group element, it must also provide an algebraic representation in terms of previously seen group elements. Because the AGM proof doesn't require rewinding (unlike the forking lemma), it avoids the square root loss entirely, achieving security that nearly matches the hardness of discrete logarithm.
+  \emph{Remark:} In the Algebraic Group Model\index{algebraic group model agm@Algebraic group model (AGM)} (AGM)~\cite{C:FucKilLos18}, Schnorr signatures can be proven secure with a much tighter reduction\index{reduction@Reduction}. The AGM assumes that whenever an adversary outputs a group element, it must also provide an algebraic representation in terms of previously seen group elements. Because the AGM proof doesn't require rewinding (unlike the forking lemma), it avoids the square root loss entirely, achieving security that nearly matches the hardness of discrete logarithm.
 \end{mysolution}
 \fi
 
@@ -312,13 +312,13 @@ The proof is left as an exercise (see \autoref{ex:schnorr-euf-cma}).
 
 \ifsolutions
 \begin{mysolution}
-  We prove the lemma by a sequence of game hops between the three games in \autoref{fig:schnorr-reduction}.
+  We prove the lemma by a sequence of game hops\index{game@Game!game hopping@game hopping} between the three games in \autoref{fig:schnorr-reduction}.
 
   \paragraph{From $\Game~\algo{EUF\text{-}CMA}$ to $\game{\algo{Single}}{\algo{InpGen}}[\bdv]$}
   The main differences are:
   \begin{itemize}
     \item $\bdv$ receives $((\GG, p, g), X)$ from $\algo{InpGen}(1^\secpar)$ instead of generating the key pair $(x, X)$.
-    \item The signing oracle $\pcoracle{Sign}_{\bdv}$ simulates signing without knowing $x$ by programming the random oracle.
+    \item The signing oracle\index{oracle@Oracle!signing oracle@signing oracle} $\pcoracle{Sign}_{\bdv}$ simulates signing without knowing $x$ by programming\index{programmable random oracle@Programmable random oracle} the random oracle\index{random oracle@Random oracle}.
     \item $\bdv$ explicitly asserts the winning conditions of $\Game~\algo{EUF\text{-}CMA}$, and outputs $((R^*, m^*), s^*)$.
   \end{itemize}
 
@@ -335,7 +335,7 @@ The proof is left as an exercise (see \autoref{ex:schnorr-euf-cma}).
 
     Both methods produce signatures satisfying the verification equation $g^s = R \cdot X^c$. The key insight is that:
     \begin{itemize}
-      \item In the EUF-CMA game: Starting from uniform $r$, we get uniform $R \in \GG$ and compute $s$ deterministically
+      \item In the EUF-CMA\index{eufcma security@EUF-CMA security} game: Starting from uniform $r$, we get uniform $R \in \GG$ and compute $s$ deterministically
       \item In $\bdv$: Starting from uniform $(c, s)$, we compute $R$ deterministically to satisfy the same equation
     \end{itemize}
 
@@ -351,7 +351,7 @@ The proof is left as an exercise (see \autoref{ex:schnorr-euf-cma}).
   Thus we conclude that
   \[
     \pr{\game{\Game~\algo{EUF-CMA}}{\algo{SchnorrSig}} = 1 \wedge \neg E} =  \pr{\game{\algo{Single}}{\algo{InpGen}}[\bdv] = 1 \wedge \neg E}
-  \] and by the Difference Lemma (\autoref{lem:difference}) we have
+  \] and by the Difference Lemma\index{difference lemma@Difference lemma} (\autoref{lem:difference}) we have
   \[
     |\pr{\game{\Game~\algo{EUF-CMA}}{\algo{SchnorrSig}} = 1} - \pr{\game{\algo{Single}}{\algo{InpGen}}[\bdv] = 1}| \leq \Pr[E]
   \].
@@ -361,7 +361,7 @@ The proof is left as an exercise (see \autoref{ex:schnorr-euf-cma}).
   Moreover, at the time of each signing query, the table $T_{\bdv}$ contains at most $q_s + q_h$ entries (from previous signing queries and hash queries).
   Therefore, the probability that $(R, m)$ matches any existing entry in $T_{\bdv}$ is at most $\frac{q_s + q_h}{|\GG|}$.
 
-  By union bound over all $q_s$ signing queries:
+  By union bound\index{union bound@Union bound} over all $q_s$ signing queries:
   \[
     \Pr[E] \leq \frac{q_s(q_s + q_h)}{|\GG|} \leq \frac{q_s(q_s + q_h)}{2^{\secpar-1}}
   \]
@@ -394,12 +394,12 @@ The proof is left as an exercise (see \autoref{ex:schnorr-euf-cma}).
 \fi
 
 \begin{exercise}\label{ex:schnorr-euf-cma}
-  Prove \autoref{thm:schnorr-euf-cma}. Use \autoref{lem:schnorr-to-single} and the forking lemma (\autoref{lem:fork}).
+  Prove \autoref{thm:schnorr-euf-cma}. Use \autoref{lem:schnorr-to-single} and the forking lemma\index{forking lemma@Forking lemma} (\autoref{lem:fork}).
 \end{exercise}
 
 \ifsolutions
 \begin{mysolution}
-  We construct a \ppt algorithm $\ddv$ that solves the discrete logarithm problem using a \ppt EUF-CMA adversary $\adv$ against Schnorr signatures.
+  We construct a \ppt algorithm $\ddv$ that solves the discrete logarithm\index{discrete logarithm dl@Discrete logarithm (DL)} problem using a \ppt EUF-CMA\index{eufcma security@EUF-CMA security} adversary $\adv$ against Schnorr\index{schnorr signature@Schnorr signature} signatures.
   
   Given a discrete logarithm instance $((\GG, p, g), X)$ where $X = g^x$ for unknown $x$, algorithm $\ddv$ works as follows:
   \begin{enumerate}
@@ -430,7 +430,7 @@ The proof is left as an exercise (see \autoref{ex:schnorr-euf-cma}).
     \advantage{DLog}{\ddv, \grgen} = \advantage{Fork}{\cdv, \algo{InpGen}}
   \]
   
-  By the forking lemma (noting that $\pcoracle{H}$ maps to $\ZZ_p$ where $|\ZZ_p| = p \geq 2^{\secpar-1}$):
+  By the forking lemma\index{forking lemma@Forking lemma} (noting that $\pcoracle{H}$ maps to $\ZZ_p$ where $|\ZZ_p| = p \geq 2^{\secpar-1}$):
   \begin{align*}
     \advantage{Fork}{\cdv, \algo{InpGen}} &\geq \advantage{Single}{\cdv, \algo{InpGen}} \left( \frac{\advantage{Single}{\cdv, \algo{InpGen}}}{q_h + 1} - \frac{1}{2^{\secpar-1}} \right)\\
     &\geq  \frac{\advantage{Single}{\cdv, \algo{InpGen}}^2}{q_h + 1} - \frac{1}{2^{\secpar-1}}\\
@@ -465,11 +465,11 @@ The proof is left as an exercise (see \autoref{ex:schnorr-euf-cma}).
   \]
   
   $q_s, q_h$ are polynomial in $\secpar$ since $\adv$ is \ppt
-  Assuming the discrete logarithm problem is hard (i.e., $\advantage{DLog}{\ddv, \grgen}$ is negligible), we conclude that $\advantage{EUF-CMA}{\adv, \algo{SchnorrSig}[\grgen, \algo{H}]}$ is negligible.
+  Assuming the discrete logarithm problem is hard (i.e., $\advantage{DLog}{\ddv, \grgen}$ is negligible\index{negligible function@Negligible function}), we conclude that $\advantage{EUF-CMA}{\adv, \algo{SchnorrSig}[\grgen, \algo{H}]}$ is negligible.
 \end{mysolution}
 \fi
 
 \begin{exercise}[Optional]
-  Study the formalization of adaptor signatures in Gerhart, Schröder, Soni, and Thyagarajan~\cite{EC:GSST24}.
+  Study the formalization of adaptor signatures\index{adaptor signature@Adaptor signature} in Gerhart, Schröder, Soni, and Thyagarajan~\cite{EC:GSST24}.
   Explain what gaps existed in previous formalizations and how this work addresses them.
 \end{exercise}

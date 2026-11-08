@@ -1,7 +1,7 @@
 \section{Introduction}\label{sec:intro}
 
 This workbook has two primary goals.
-First, it aims to provide sufficient background to understand state-of-the-art papers on cryptographic signatures, with a focus on discrete-logarithm-based multi-party signatures, including their security proofs.
+First, it aims to provide sufficient background to understand state-of-the-art papers on cryptographic signatures, with a focus on discrete-logarithm\index{discrete logarithm dl@Discrete logarithm (DL)}-based multi-party signatures, including their security proofs.
 Second, it seeks to develop the skills needed to formalize security notions for cryptographic primitives.
 This skill is crucial for selecting appropriate primitives when proposing and reviewing cryptographic protocols, and for defining precisely what a protocol aims to achieve.
 
@@ -21,7 +21,7 @@ This is why contemporary papers in cryptography include a preliminaries section 
 
 \subsection{Prerequisites}
 
-This workbook assumes familiarity with basic set notation, operations in $\ZZ_p$, cyclic groups, elementary probability theory (including conditional probability and the union bound), and proof by contraposition.
+This workbook assumes familiarity with basic set notation, operations in $\ZZ_p$, cyclic groups, elementary probability theory (including conditional probability and the union bound\index{union bound@Union bound}), and proof by contraposition\index{contraposition@Contraposition}.
 See Appendix~\ref{sec:notation} for a summary of the notation used throughout this book.
 
 \subsection{Algorithms}
@@ -29,25 +29,25 @@ See Appendix~\ref{sec:notation} for a summary of the notation used throughout th
 \say{In mathematics, \emph{algorithm} is commonly understood to be an exact prescription, defining a computational process, leading from various initial data to the desired result.} (A. Markov, 1954)
 
 \begin{definition}
-An algorithm $\adv$ is
+An algorithm\index{algorithm@Algorithm|textbf} $\adv$ is
 \begin{itemize}
-\item \emph{probabilistic} if it gets random bits as input (in addition to its regular input).
+\item \emph{probabilistic\index{algorithm@Algorithm!probabilistic@probabilistic|textbf}} if it gets random bits as input (in addition to its regular input).
 We write $\adv(x; \rho)$ to denote running algorithm $\adv$ on input $x$ with randomness $\rho$.
 When the randomness is clear from context or unnecessary, we simply write $\adv(x)$.
-\item \emph{polynomial-time} if there exists a polynomial $p$ such that for every $x \in \{0,1\}^\lambda$, $\adv(x)$ terminates in time $p(\lambda)$.
-\item \emph{probabilistic polynomial-time (\ppt)} if it is probabilistic and polynomial-time.
+\item \emph{polynomial-time\index{algorithm@Algorithm!polynomialtime@polynomial-time|textbf}} if there exists a polynomial $p$ such that for every $x \in \{0,1\}^\lambda$, $\adv(x)$ terminates in time $p(\lambda)$.
+\item \emph{probabilistic polynomial-time\index{probabilistic polynomialtime ppt@Probabilistic polynomial-time (p.p.t.)|textbf} (\ppt)} if it is probabilistic and polynomial-time.
 \end{itemize}
 \end{definition}
 
 Note that the runtime of an algorithm is characterized relative to the size of the input.
-All adversaries considered in cryptography are algorithms.
+All adversaries\index{adversary@Adversary|textbf} considered in cryptography are algorithms.
 
 \subsection{Negligible Functions}
 
 
 
 \begin{definition}
-A function $f: \ZZ \rightarrow \mathbb{R}$ is \emph{negligible} if for every constant $c > 0$ there exists $N \in \NN$ such that for all integers $\secpar > N$, $f(\secpar) < \secpar^{-c}$.
+A function $f: \ZZ \rightarrow \mathbb{R}$ is \emph{negligible\index{negligible function@Negligible function|textbf}} if for every constant $c > 0$ there exists $N \in \NN$ such that for all integers $\secpar > N$, $f(\secpar) < \secpar^{-c}$.
 % Or equivalently.
 % - We denote the set of \emph{polynomially-bounded} functions in the security parameter $\secpar$ by $\poly = \{ f : \exists a \in \NN,\ f(\secpar) \in O(\lambda^a) \}$,. functions in the security parameter $\secpar$ by $\negl = \{ f : f(\secpar)^{-1} \not\in \poly \}$
 % - for all $a \in \NN$, there exists $N \in \NN$ such that for all $\secpar \ge N$, $f(\secpar) \le \frac{1}{\lambda^a}$.
@@ -76,9 +76,9 @@ The proofs of properties (2)-(4) can be found in Appendix~\ref{sec:appendix-negl
 
 \subsection{Games \& Asymptotic Security}
 
-In this section we will introduce the concept of security games (sometimes called ``experiments'') and asymptotic security through a series of toy examples.
+In this section we will introduce the concept of security games\index{game@Game|textbf} (sometimes called ``experiments'') and asymptotic security\index{asymptotic security@Asymptotic security} through a series of toy examples.
 
-The $\game{\Game~\algo{Guess}}{}$ defined in \autoref{fig:guessing-game} takes an algorithm $\adv$ and the security parameter $\secpar$ as input and outputs $1$ or $0$.
+The $\game{\Game~\algo{Guess}}{}$ defined in \autoref{fig:guessing-game} takes an algorithm $\adv$ and the security parameter\index{security parameter@Security parameter|textbf} $\secpar$ as input and outputs $1$ or $0$.
 The game first sets $n = 2^\lambda$ and samples $x$ uniformly at random from $\ZZ_n$.
 Then it runs algorithm $\adv$ without input, sets its output to $x'$ and returns $1$ if $x = x'$.
 
@@ -99,7 +99,7 @@ Then it runs algorithm $\adv$ without input, sets its output to $x'$ and returns
 \end{figure}
 
 \begin{definition}[Guessing game advantage]
-  For $\game{\Game~\algo{Guess}}{}$ as defined in \autoref{fig:guessing-game} we define the advantage of algorithm $\adv$ as
+  For $\game{\Game~\algo{Guess}}{}$ as defined in \autoref{fig:guessing-game} we define the advantage\index{advantage@Advantage|textbf} of algorithm $\adv$ as
  \[
   \advantage{Guess}{\adv} \defeq \pr{\game{\algo{Guess}}{} = 1}.
  \]
@@ -114,7 +114,7 @@ Let $x'$ be the value returned by $\adv$.
 The probability that $x$ sampled independently and uniformly at random from $[1, 2^\lambda]$ is equal to $x'$ is $2^{-\lambda} = \negl$.
 \end{proof}
 
-While the guessing game above provides a clean security definition, formalizing the security of concrete hash functions like SHA256 requires a fundamentally different approach.
+While the guessing game\index{game@Game!guessing game@guessing game|textbf} above provides a clean security definition, formalizing the security of concrete hash functions\index{hash function@Hash function} like SHA256 requires a fundamentally different approach.
 To illustrate this, consider the $\game{\Game~\algo{SHAPreimgZ}}{}$ defined in \autoref{fig:sha-preimg-0}, which outputs $1$ if the algorithm $\adv$ outputs a preimage of 0 under the hash function $\algo{SHA256}: \{0, 1\}^* \rightarrow \{0, 1\}^{256}$.
 Note that $\adv$ gets $1^{\secpar}$ (a string of 1s of length $\secpar$) as input in order to characterise the running time of $\adv$ as a function of the security parameter $\secpar$.
 
@@ -152,7 +152,7 @@ Note that $\adv$ gets $1^{\secpar}$ (a string of 1s of length $\secpar$) as inpu
   where $\algo{SHA256}(x) = 0$.
 \end{proof}
 
-Next, we consider a variant of preimage resistance for SHA256 where the target value is chosen uniformly at random, preventing the existence of trivial algorithms like the one in Proposition~\ref{prop:sha-preimg-z}.
+Next, we consider a variant of preimage resistance\index{preimage resistance@Preimage resistance} for SHA256 where the target value is chosen uniformly at random, preventing the existence of trivial algorithms like the one in Proposition~\ref{prop:sha-preimg-z}.
 In $\game{\Game~\algo{SHAPreimg}}{}$ defined in \autoref{fig:sha-preimg} the value $x$ is a uniformly random bitstring of length $256$.
 
 \begin{figure}[tbhp]
@@ -207,14 +207,14 @@ In $\game{\Game~\algo{SHAPreimg}}{}$ defined in \autoref{fig:sha-preimg} the val
 % There is also an algorithm which just has all preimages of SHA256 hardcoded and stored in order. Then use binary search.
 
 We observe that if the output space of the hash function is independent of the security parameter, then the hash function is not preimage-resistant.\footnote{This holds even if $\game{\Game~\algo{SHAPreimg}}{}$ samples the challenge from $\{0,1\}^\secpar$ instead of the hash function's output space.
-For a hash function with constant output size (e.g., 256 bits), an adversary that makes a single random guess has probability at least $2^{-256}$ of finding a preimage, which is non-negligible in $\secpar$.}
+For a hash function with constant output size (e.g., 256 bits), an adversary that makes a single random guess has probability at least $2^{-256}$ of finding a preimage, which is non-negligible\index{negligible function@Negligible function} in $\secpar$.}
 
 \subsection{Hash Functions}
 
 \begin{definition}[Hash function]
-  A \emph{hash function} $\algo{H}$ is a pair of polynomial-time algorithms $(\algo{Gen}, \algo{Eval})$ where:
+  A \emph{hash function\index{hash function@Hash function|textbf}} $\algo{H}$ is a pair of polynomial-time\index{algorithm@Algorithm!polynomialtime@polynomial-time} algorithms $(\algo{Gen}, \algo{Eval})$ where:
   \begin{itemize}
-  \item $\algo{Gen}(\secparam) \rightarrow \kappa$ is a probabilistic algorithm that takes the security parameter as input and outputs a hashing key $\kappa$\footnote{We assume $\kappa$ includes $\secparam$ so that $\algo{Eval}$ can run in time polynomial in $\secpar$}.
+  \item $\algo{Gen}(\secparam) \rightarrow \kappa$ is a probabilistic\index{algorithm@Algorithm!probabilistic@probabilistic} algorithm that takes the security parameter\index{security parameter@Security parameter} as input and outputs a hashing key\index{hash function@Hash function!hashing key@hashing key|textbf} $\kappa$\footnote{We assume $\kappa$ includes $\secparam$ so that $\algo{Eval}$ can run in time polynomial in $\secpar$}.
   \item $\algo{Eval}(\kappa, x) \rightarrow y$ is a deterministic algorithm that takes a hashing key $\kappa$ and an input $x \in \{0,1\}^*$ as input and outputs a hash value $y \in S$. When not specified otherwise, we assume $S = \{0,1\}^{\lambda}$.\footnote{For notational simplicity, $\algo{H.Eval}(\kappa, x)$ is often written as $\algo{H}(x)$, leaving the hashing key implicit.}
   \end{itemize}
 \end{definition}
@@ -245,10 +245,10 @@ Note that the hashing key $\kappa$ is not secret because it is required to evalu
 
 Similar to the algorithm in \autoref{fig:sha-preimg-adv}, there exists an algorithm that wins $\game{\Game~\algo{Preimage}}{\algo{H}}$ with probability 1 by just evaluating $\algo{H.Eval}$ on fresh inputs until $\algo{H.Eval}(x) = y$.
 However, for adequate hash functions this algorithm runs in time exponential in the security parameter.
-Hence, the definition of preimage-resistance only considers \ppt adversaries.
+Hence, the definition of preimage-resistance\index{preimage resistance@Preimage resistance} only considers \ppt adversaries.
 
 \begin{definition}[Preimage-resistance]\label{def:preimage-resistance}
-  A hash function $\algo{H}$ is \emph{preimage-resistant} if for any \ppt algorithm $\adv$,
+  A hash function $\algo{H}$ is \emph{preimage-resistant\index{preimage resistance@Preimage resistance|textbf}} if for any \ppt algorithm $\adv$,
  \[
   \advantage{PreI}{\adv, \algo{H}} \defeq \pr{\game{\algo{Preimage}}{\algo{H}} = 1} = \negl.
  \]
@@ -259,8 +259,8 @@ Hence, the definition of preimage-resistance only considers \ppt adversaries.
 % Then the algorithm could look up the challenge y in $O(\log(2^\secpar)) = O(\secpar)$ time.
 
 \begin{remark}[Asymptotic Security Framework]
-  Definition~\ref{def:preimage-resistance} is an example of a definition in the asymptotic security framework.
-  The hash function $\algo{H}$ consists of algorithms that are polynomial-time in $\secpar$, and preimage resistance requires that any \ppt adversary's success probability is negligible in $\secpar$.
+  Definition~\ref{def:preimage-resistance} is an example of a definition in the asymptotic security\index{asymptotic security@Asymptotic security|textbf} framework.
+  The hash function $\algo{H}$ consists of algorithms that are polynomial-time in $\secpar$, and preimage resistance requires that any \ppt adversary's success probability is negligible\index{negligible function@Negligible function} in $\secpar$.
   Hence, by increasing $\lambda$ we can make the success probability of any \ppt adversary arbitrarily small.
 \end{remark}
 
@@ -268,7 +268,7 @@ Hence, the definition of preimage-resistance only considers \ppt adversaries.
 \subsection{Exercises}
 
 \begin{exercise}\label{ex:negligible-functions}
-  Determine which of the following functions are negligible in $\secpar$:
+  Determine which of the following functions are negligible\index{negligible function@Negligible function} in $\secpar$:
   \begin{enumerate}
     \item $f(\secpar) = 0$
     \item $f(\secpar) = \frac{1}{2}$
@@ -280,7 +280,7 @@ Hence, the definition of preimage-resistance only considers \ppt adversaries.
 
 \ifsolutions
 \begin{mysolution}
-  We analyze each function using the definition of negligible functions and Lemma~\ref{lem:negl}:
+  We analyze each function using the definition of negligible\index{negligible function@Negligible function} functions and Lemma~\ref{lem:negl}:
   \begin{enumerate}
     \item $f(\secpar) = 0$ is \emph{negligible}.
     For any constant $c > 0$, we have $0 < \secpar^{-c}$ for all $\secpar > 0$.
@@ -340,14 +340,14 @@ Hence, the definition of preimage-resistance only considers \ppt adversaries.
 
 \begin{exercise}\label{ex:sha-preimage-problem}
   Why is the definition of $\advantage{SHAPreIZ}{\adv}$ in Proposition~\ref{prop:sha-preimg-z} problematic from a cryptographic perspective?
-  What fundamental issue does it illustrate about concrete hash functions like SHA256?
+  What fundamental issue does it illustrate about concrete hash functions\index{hash function@Hash function} like SHA256?
 \end{exercise}
 
 \ifsolutions
 \begin{mysolution}
-  The definition is problematic because it doesn't depend on the security parameter $\secpar$ in a meaningful way.
+  The definition is problematic because it doesn't depend on the security parameter\index{security parameter@Security parameter} $\secpar$ in a meaningful way.
   The adversary $\adv$ that returns a hardcoded preimage of 0 (if one exists) always succeeds with probability 1, regardless of $\secpar$.
-  This illustrates that we cannot achieve asymptotic security for concrete, fixed hash functions like SHA256: their output size doesn't grow with the security parameter.
+  This illustrates that we cannot achieve asymptotic security\index{asymptotic security@Asymptotic security} for concrete, fixed hash functions\index{hash function@Hash function} like SHA256: their output size doesn't grow with the security parameter.
   This is why we define abstract hash function families where the output length grows with $\secpar$.
 \end{mysolution}
 \fi
@@ -361,29 +361,29 @@ Hence, the definition of preimage-resistance only considers \ppt adversaries.
 \begin{mysolution}
   The adversary's running time is indeed polynomial in $\secpar$: it's a constant independent of $\secpar$, which is $O(1)$ and therefore polynomial.
   However, this constant is potentially $2^{256}$, which is astronomically large.
-  The problem is that the output size (256 bits) doesn't grow with $\secpar$, so even exhaustive search becomes ``polynomial time'' in $\secpar$.
-  This shows that asymptotic security only makes sense when the problem size grows with the security parameter.
+  The problem is that the output size (256 bits) doesn't grow with $\secpar$, so even exhaustive search becomes ``polynomial time\index{algorithm@Algorithm!polynomialtime@polynomial-time}'' in $\secpar$.
+  This shows that asymptotic security\index{asymptotic security@Asymptotic security} only makes sense when the problem size grows with the security parameter\index{security parameter@Security parameter}.
 \end{mysolution}
 \fi
 
 \begin{exercise}\label{ex:hash-function-definition}
-  How does the definition of preimage resistance for hash functions (Definition~\ref{def:preimage-resistance}) avoid the issues encountered with the SHA256 examples?
+  How does the definition of preimage resistance\index{preimage resistance@Preimage resistance} for hash functions\index{hash function@Hash function} (Definition~\ref{def:preimage-resistance}) avoid the issues encountered with the SHA256 examples?
 \end{exercise}
 
 \ifsolutions
 \begin{mysolution}
-  The definition avoids the issues by considering hash function families rather than fixed functions like SHA256:
+  The definition avoids the issues by considering hash function\index{hash function@Hash function} families rather than fixed functions like SHA256:
   \begin{enumerate}
     \item The definition uses a hash function family where the output size can grow with $\secpar$, ensuring that exhaustive search takes time exponential in $\secpar$ rather than constant time.
     \item The hash function is indexed by a key $\kappa$ selected by $\algo{Gen}(\secparam)$, preventing hardcoding of specific preimages since the adversary doesn't know which function from the family will be used.
   \end{enumerate}
-  These changes allow the adversary's success probability to meaningfully depend on $\secpar$ and be made negligible by increasing it.
+  These changes allow the adversary's success probability to meaningfully depend on $\secpar$ and be made negligible\index{negligible function@Negligible function} by increasing it.
   Note that this doesn't make SHA256 itself secure in the asymptotic sense - it remains a fixed function with constant output size.
 \end{mysolution}
 \fi
 
 \begin{exercise}[Optional]\label{ex:negl-property-proof}
-  Prove property (1) of Lemma~\ref{lem:negl}: If $f$ is a negligible function and $p$ is a polynomial, then $f(\secpar) \cdot p(\secpar)$ is negligible.
+  Prove property (1) of Lemma~\ref{lem:negl}: If $f$ is a negligible\index{negligible function@Negligible function} function and $p$ is a polynomial, then $f(\secpar) \cdot p(\secpar)$ is negligible.
   
   \emph{Hints:}
   \begin{itemize}
@@ -394,7 +394,7 @@ Hence, the definition of preimage-resistance only considers \ppt adversaries.
 
 \ifsolutions
 \begin{mysolution}
-  We need to show that $f(\lambda) \cdot p(\lambda)$ is negligible, i.e., for any $c > 0$, we have $f(\lambda) \cdot p(\lambda) < \lambda^{-c}$ for sufficiently large $\lambda$.
+  We need to show that $f(\lambda) \cdot p(\lambda)$ is negligible\index{negligible function@Negligible function}, i.e., for any $c > 0$, we have $f(\lambda) \cdot p(\lambda) < \lambda^{-c}$ for sufficiently large $\lambda$.
   
   First, since $p$ is a polynomial, there exists a positive integer $a$ and $N_p \in \NN$ such that $p(\lambda) < \lambda^{a}$ for all $\lambda > N_p$.
   
@@ -413,26 +413,26 @@ Hence, the definition of preimage-resistance only considers \ppt adversaries.
 \fi
 
 \begin{exercise}[Optional]\label{ex:concrete-security}
-  An alternative to the asymptotic approach is the \emph{concrete security} approach.
+  An alternative to the asymptotic approach\index{asymptotic security@Asymptotic security} is the \emph{concrete security\index{concrete security@Concrete security|textbf}} approach.
   In this approach, we define $(t,\epsilon)$-hardness as follows:
   The $\game{\Game~\algo{Guess}}{}$ as defined in \autoref{fig:guessing-game} is $(t,\epsilon)$-hard if for any algorithm $\adv$ running in time $t$, we have $\pr{\game{\Game~\algo{Guess}}{} = 1} \le \epsilon$.
   
-  Give a proposition about the concrete hardness of the guessing game, analogous to Proposition~\ref{prop:guessing-game}.
+  Give a proposition about the concrete hardness of the guessing game\index{game@Game!guessing game@guessing game}, analogous to Proposition~\ref{prop:guessing-game}.
 \end{exercise}
 
 \ifsolutions
 \begin{mysolution}
   \emph{Proposition:} For any $t$ and $\lambda$, the $\game{\Game~\algo{Guess}}{}$ is $(t, 2^{-\lambda})$-hard.
   
-  \emph{Proof:} The proof is identical to Proposition~\ref{prop:guessing-game}, but we emphasize that the bound $2^{-\lambda}$ holds for \emph{all} $t$, not just polynomial time.
+  \emph{Proof:} The proof is identical to Proposition~\ref{prop:guessing-game}, but we emphasize that the bound $2^{-\lambda}$ holds for \emph{all} $t$, not just polynomial time\index{algorithm@Algorithm!polynomialtime@polynomial-time}.
   
-  Note: This shows that in the concrete setting, we explicitly state the security level ($2^{-\lambda}$) rather than saying it's ``negligible''.
+  Note: This shows that in the concrete setting, we explicitly state the security level ($2^{-\lambda}$) rather than saying it's ``negligible\index{negligible function@Negligible function}''.
   The concrete approach gives precise bounds rather than asymptotic statements.
 \end{mysolution}
 \fi
 
 \begin{exercise}[Optional]\label{ex:foundations-hashing}
-  This question explores problems when defining security for hash functions.
+  This question explores problems when defining security for hash functions\index{hash function@Hash function}.
   Read Section 1 and Section 4 of ``Formalizing Human Ignorance''~\cite{VIETCRYPT:Rogaway06}.
   \begin{enumerate}
     \item What is the ``Foundations-of-Hashing dilemma''?
@@ -445,10 +445,10 @@ Hence, the definition of preimage-resistance only considers \ppt adversaries.
 \ifsolutions
 \begin{mysolution}
   \begin{enumerate}
-    \item The Foundations-of-Hashing dilemma: For any fixed, unkeyed hash function (like SHA256), there always exists an adversary that simply prints a collision.
+    \item The Foundations-of-Hashing dilemma: For any fixed, unkeyed hash function\index{hash function@Hash function} (like SHA256), there always exists an adversary that simply prints a collision.
     This adversary exists mathematically even if we don't know how to construct it.
-    This makes it impossible to prove collision resistance in the standard model.
-    \item The alternative approach requires ``explicitly given'' reductions.
+    This makes it impossible to prove collision resistance\index{collision resistance@Collision resistance} in the standard model.
+    \item The alternative approach requires ``explicitly given'' reductions\index{reduction@Reduction}.
     This means the security proof must provide an explicit, constructive reduction that converts a collision-finding adversary into a solution to some other hard problem.
     The adversary that prints SHA256 collisions is not ``explicitly given'' because we cannot actually write down its code (we don't know any collisions).
   \end{enumerate}

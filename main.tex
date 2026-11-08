@@ -60,6 +60,13 @@
 \usepackage[dvipsnames,svgnames,x11names]{xcolor}
 \definecolor{bitcoin-orange}{RGB}{246, 145, 29}
 
+%%% Index (see tex/index.tex)
+% Each \index{...} mark in the text records its page. makeindex sorts the
+% marks into the index; run it with ./makeindex-wrapper.sh (latexmk does this).
+\usepackage{multicol}
+\usepackage{makeidx}
+\makeindex
+
 %%% Boxes
 \usepackage{tcolorbox}
 \tcbset{colback=white, size=title, boxsep=2mm}
@@ -410,7 +417,7 @@
 This appendix contains the proofs of properties (2)-(4) from Lemma~\ref{lem:negl}.
 
 \begin{proof}[Proof of Lemma~\ref{lem:negl}(2)]
-  Let $f_1, f_2$ be negligible functions.
+  Let $f_1, f_2$ be negligible\index{negligible function@Negligible function} functions.
   We need to show that $f_1 + f_2$ is negligible.
   
   Let $c > 0$ be arbitrary. We must find $N$ such that $(f_1 + f_2)(\secpar) < \secpar^{-c}$ for all $\secpar > N$.
@@ -458,7 +465,10 @@ This appendix contains the proofs of properties (2)-(4) from Lemma~\ref{lem:negl
   This contradicts the assumption that $f$ is non-negligible.
 \end{proof}
 
+\input{tex/index.tex}
+
 %%% Acknowledgements
+\newpage
 \section*{Acknowledgements}
 We thank Nadav Kohen, Pieter Wuille, and Tim Ruffing for valuable feedback and discussions.
 We also thank Sergi Delgado Segura, TheCharlatan, Mikhail Kudinov, Sebastian Falbesoner, Adam Gibson, Hennadii Stepanov, Carla Kirk-Cohen, and Abubakar Sadiq Ismail for their contributions and review.

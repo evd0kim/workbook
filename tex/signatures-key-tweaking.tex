@@ -1,22 +1,22 @@
 \section{Signatures with Key Tweaking}\label{sec:signatures-key-tweaking}
 
-Key tweaking is fundamental in hierarchical deterministic (HD) Bitcoin wallets~\cite{add:bip-hdwallets} and Taproot commitments~\cite{add:bip-taproot}, enabling the derivation of multiple keys from a single master key and committing to additional data in public keys.
+Key tweaking\index{key tweaking@Key tweaking} is fundamental in hierarchical deterministic (HD) Bitcoin wallets~\cite{add:bip-hdwallets} and Taproot\index{taproot commitment@Taproot commitment} commitments\index{commitment scheme@Commitment scheme}~\cite{add:bip-taproot}, enabling the derivation of multiple keys from a single master key and committing to additional data in public keys.
 
 \subsection{Syntax}
 
 \begin{definition}[Tweaking Scheme for Signatures]
-  A tweaking scheme $\algo{TwSch}$ for a signature scheme $\algo{Sig}$ is a tuple $(\mathcal{T}, \algo{TwSK}, \algo{TwPK})$ where:
+  A tweaking\index{key tweaking@Key tweaking|textbf} scheme\index{key tweaking@Key tweaking!tweaking scheme@tweaking scheme|textbf} $\algo{TwSch}$ for a signature scheme\index{signature scheme@Signature scheme} $\algo{Sig}$ is a tuple $(\mathcal{T}, \algo{TwSK}, \algo{TwPK})$ where:
   \begin{itemize}
-    \item $\mathcal{T}$ is a set of allowed tweaks, parameterized by the public parameters $\params$ output by $\algo{Setup}$.
-    \item $\algo{TwSK}(\sk, t) \rightarrow \tilde{\sk}$ is a deterministic polynomial-time algorithm that takes a secret key $\sk$ and a tweak $t \in \mathcal{T}$ as input and outputs a tweaked secret key $\tilde{\sk}$.
+    \item $\mathcal{T}$ is a set of allowed tweaks, parameterized by the public parameters\index{public parameters@Public parameters} $\params$ output by $\algo{Setup}$.
+    \item $\algo{TwSK}(\sk, t) \rightarrow \tilde{\sk}$ is a deterministic polynomial-time\index{algorithm@Algorithm!polynomialtime@polynomial-time} algorithm that takes a secret key $\sk$ and a tweak $t \in \mathcal{T}$ as input and outputs a tweaked secret key $\tilde{\sk}$.
     \item $\algo{TwPK}(\pk, t) \rightarrow \tilde{\pk}$ is a deterministic polynomial-time algorithm that takes a public key $\pk$ and a tweak $t \in \mathcal{T}$ as input and outputs a tweaked public key $\tilde{\pk}$.
   \end{itemize}
 \end{definition}
 
 \subsection{Key Tweaking for Schnorr Signatures}
 
-\begin{definition}[SchnorrTS]\label{def:schnorrts}
-  The tweaking scheme $\algo{SchnorrTS}$ for Schnorr signatures is defined as follows:
+\begin{definition}[SchnorrTS]\index{key tweaking@Key tweaking!schnorrts@SchnorrTS|textbf}\index{schnorr signature@Schnorr signature!with key tweaking@with key tweaking|textbf}\label{def:schnorrts}
+  The tweaking\index{key tweaking@Key tweaking} scheme\index{key tweaking@Key tweaking!tweaking scheme@tweaking scheme} $\algo{SchnorrTS}$ for Schnorr\index{schnorr signature@Schnorr signature} signatures is defined as follows:
   \begin{itemize}
     \item The tweak set is $\mathcal{T} \defeq \ZZ_p \times \ZZ_p^*$ where $\ZZ_p^* = \ZZ_p \setminus \{0\}$.
     \item For $(\alpha, \beta) \in \mathcal{T}$, the secret key tweaking algorithm is:
@@ -33,7 +33,7 @@ Key tweaking is fundamental in hierarchical deterministic (HD) Bitcoin wallets~\
 \end{definition}
 
 \begin{definition}[Schnorr Signature with Key Prefixing]\label{def:schnorr-kp}
-  The Schnorr signature scheme with key prefixing $\algo{SchnorrSigKP}[\grgen, \algo{H}]$ is identical to $\algo{SchnorrSig}[\grgen, \algo{H}]$ except that the hash is computed as:
+  The Schnorr signature scheme\index{signature scheme@Signature scheme} with key prefixing\index{key prefixing@Key prefixing|textbf}\index{schnorr signature@Schnorr signature!with key prefixing@with key prefixing|textbf} $\algo{SchnorrSigKP}[\grgen, \algo{H}]$ is identical to $\algo{SchnorrSig}[\grgen, \algo{H}]$ except that the hash is computed as:
   \[
     c = \algo{H.Eval}(\kappa, (R, X, m))
   \]
@@ -42,16 +42,16 @@ Key tweaking is fundamental in hierarchical deterministic (HD) Bitcoin wallets~\
 
 \subsection{Security with Tweaked Keys}
 
-The security notion of \emph{existential unforgeability under chosen message attack with tweaked keys (EUF-CMA-TK)}\label{def:euf-cma-tk-informal} extends the standard EUF-CMA notion to capture security when an adversary can obtain signatures under tweaked keys.
+The security notion of \emph{existential unforgeability\index{eufcma security@EUF-CMA security} under chosen message attack with tweaked\index{key tweaking@Key tweaking} keys (EUF-CMA-TK\index{eufcma security@EUF-CMA security!with tweaked keys eufcmatk@with tweaked keys (EUF-CMA-TK)|textbf})}\label{def:euf-cma-tk-informal} extends the standard EUF-CMA notion to capture security when an adversary can obtain signatures under tweaked keys.
 Informally, the adversary is given a public key and can request signatures on messages of their choice, but now with an additional capability: for each signing query, they can specify a tweak in addition to the message.
-The signing oracle will return a signature that verifies under the tweaked public key (i.e., a signature created with the correspondingly tweaked secret key).
+The signing oracle\index{oracle@Oracle!signing oracle@signing oracle} will return a signature that verifies under the tweaked public key (i.e., a signature created with the correspondingly tweaked secret key).
 The adversary wins by outputting $(m^*, t^*, \sigma^*)$ such that the signature verifies under the tweaked public key for $t^*$, and the pair $(m^*, t^*)$ was never queried to the signing oracle.
 
 The formal definition of EUF-CMA-TK is left as an exercise (see \autoref{ex:euf-cma-tk-def}).
 
 \begin{theorem}[SchnorrSigKP with SchnorrTS is EUF-CMA-TK secure]\label{thm:schnorrkp-euf-cma-tk}
-  Let $\grgen$ be a group generation algorithm for which the discrete logarithm problem is hard and let $\algo{H}$ be a hash function with output space $\ZZ_p$.
-  Then the Schnorr signature scheme with key prefixing $\algo{SchnorrSigKP}[\grgen, \algo{H}]$ with tweaking scheme $\algo{SchnorrTS}$ is EUF-CMA-TK secure in the random oracle model for $\algo{H}$.
+  Let $\grgen$ be a group generation\index{group generation algorithm@Group generation algorithm} algorithm for which the discrete logarithm\index{discrete logarithm dl@Discrete logarithm (DL)} problem is hard and let $\algo{H}$ be a hash function\index{hash function@Hash function} with output space $\ZZ_p$.
+  Then the Schnorr\index{schnorr signature@Schnorr signature} signature scheme\index{signature scheme@Signature scheme} with key prefixing\index{key prefixing@Key prefixing}\index{schnorr signature@Schnorr signature!with key prefixing@with key prefixing} $\algo{SchnorrSigKP}[\grgen, \algo{H}]$ with tweaking scheme\index{key tweaking@Key tweaking!tweaking scheme@tweaking scheme} $\algo{SchnorrTS}$ is EUF-CMA-TK secure in the random oracle\index{random oracle@Random oracle} model\index{random oracle model rom@Random oracle model (ROM)} for $\algo{H}$.
 \end{theorem}
 
 The proof is left as an exercise (see \autoref{ex:schnorrkp-to-single}).
@@ -59,13 +59,13 @@ The proof is left as an exercise (see \autoref{ex:schnorrkp-to-single}).
 \subsection{Exercises}
 
 \begin{exercise}
-  Define perfect correctness for a signature scheme with tweaking.
+  Define perfect correctness\index{correctness@Correctness} for a signature scheme\index{signature scheme@Signature scheme} with tweaking\index{key tweaking@Key tweaking}.
   Specifically, modify standard signature scheme correctness (\autoref{def:sig-correctness}) to ensure that signatures created with a tweaked secret key verify correctly under the corresponding tweaked public key.
 \end{exercise}
 
 \ifsolutions
 \begin{mysolution}
-  A signature scheme $\algo{Sig} = (\algo{Setup}, \algo{KeyGen}, \algo{Sign}, \algo{Verify})$ with tweaking scheme $\algo{TwSch} = (\mathcal{T}, \algo{TwSK}, \algo{TwPK})$ is \emph{perfectly correct with tweaking} if:
+  A signature scheme\index{signature scheme@Signature scheme} $\algo{Sig} = (\algo{Setup}, \algo{KeyGen}, \algo{Sign}, \algo{Verify})$ with tweaking\index{key tweaking@Key tweaking} scheme\index{key tweaking@Key tweaking!tweaking scheme@tweaking scheme} $\algo{TwSch} = (\mathcal{T}, \algo{TwSK}, \algo{TwPK})$ is \emph{perfectly correct\index{correctness@Correctness} with tweaking} if:
   \begin{enumerate}
     \item The signature scheme $\algo{Sig}$ is correct (as per the standard definition).
     \item For all $\secpar \in \NN$, all tweaks $t \in \mathcal{T}$, and all messages $m \in \mathcal{M}$:
@@ -83,32 +83,32 @@ The proof is left as an exercise (see \autoref{ex:schnorrkp-to-single}).
 \fi
 
 \begin{exercise}[Optional]
-  Argue that the tweaking scheme $\algo{SchnorrTS}$ (\autoref{def:schnorrts}) is correct with the Schnorr signature scheme (\autoref{def:schnorr}).
+  Argue that the tweaking\index{key tweaking@Key tweaking} scheme\index{key tweaking@Key tweaking!tweaking scheme@tweaking scheme} $\algo{SchnorrTS}$ (\autoref{def:schnorrts}) is correct with the Schnorr\index{schnorr signature@Schnorr signature} signature scheme\index{signature scheme@Signature scheme} (\autoref{def:schnorr}).
   That is, show that signatures created with a tweaked secret key verify correctly under the corresponding tweaked public key.
 \end{exercise}
 
 \ifsolutions
 \begin{mysolution}
-  For SchnorrTS with Schnorr signatures, if $\sk = x$ and $\pk = X = g^x$, then for tweak $(\alpha, \beta) \in \mathcal{T}$:
+  For SchnorrTS\index{key tweaking@Key tweaking!schnorrts@SchnorrTS}\index{schnorr signature@Schnorr signature}\index{schnorr signature@Schnorr signature!with key tweaking@with key tweaking} with Schnorr signatures, if $\sk = x$ and $\pk = X = g^x$, then for tweak\index{key tweaking@Key tweaking} $(\alpha, \beta) \in \mathcal{T}$:
   \begin{itemize}
     \item Tweaked secret key: $\tilde{x} = \algo{TwSK}(x, (\alpha, \beta)) = \alpha + \beta \cdot x$
     \item Tweaked public key: $\tilde{X} = \algo{TwPK}(X, (\alpha, \beta)) = g^\alpha \cdot X^\beta = g^\alpha \cdot g^{\beta x} = g^{\alpha + \beta x} = g^{\tilde{x}}$
   \end{itemize}
   
-  The key observation is that the discrete logarithm relationship is preserved: $\tilde{X} = g^{\tilde{x}}$.
+  The key observation is that the discrete logarithm\index{discrete logarithm dl@Discrete logarithm (DL)} relationship is preserved: $\tilde{X} = g^{\tilde{x}}$.
   This means that $(\tilde{x}, \tilde{X})$ is a valid key pair that could have been output by $\algo{KeyGen}$.
-  By the correctness of Schnorr signatures (Lemma~\ref{lem:schnorr-correctness}), signatures created with $\tilde{x}$ will verify under $\tilde{X}$.
+  By the correctness\index{correctness@Correctness} of Schnorr signatures (Lemma~\ref{lem:schnorr-correctness}), signatures created with $\tilde{x}$ will verify under $\tilde{X}$.
 \end{mysolution}
 \fi
 
 \begin{exercise}\label{ex:euf-cma-tk-def}
-  Formalize the EUF-CMA-TK security notion by adapting EUF-CMA security (\autoref{def:euf-cma}).
+  Formalize the EUF-CMA\index{eufcma security@EUF-CMA security}-TK\index{eufcma security@EUF-CMA security!with tweaked keys eufcmatk@with tweaked keys (EUF-CMA-TK)} security notion by adapting EUF-CMA security (\autoref{def:euf-cma}).
   Your definition should capture the informal description given in \autoref{def:euf-cma-tk-informal}.
 \end{exercise}
 
 \ifsolutions
 \begin{mysolution}
-  A signature scheme $\algo{Sig} = (\algo{Setup}, \algo{KeyGen}, \algo{Sign}, \algo{Verify})$ with tweaking scheme $\algo{TwSch} = (\mathcal{T}, \algo{TwSK}, \algo{TwPK})$ is \emph{existentially unforgeable under chosen message attack with tweaking (EUF-CMA-TK)} if for all \ppt adversaries $\adv$:
+  A signature scheme\index{signature scheme@Signature scheme} $\algo{Sig} = (\algo{Setup}, \algo{KeyGen}, \algo{Sign}, \algo{Verify})$ with tweaking\index{key tweaking@Key tweaking} scheme\index{key tweaking@Key tweaking!tweaking scheme@tweaking scheme} $\algo{TwSch} = (\mathcal{T}, \algo{TwSK}, \algo{TwPK})$ is \emph{existentially unforgeable\index{eufcma security@EUF-CMA security} under chosen message attack with tweaking (EUF-CMA-TK\index{eufcma security@EUF-CMA security!with tweaked keys eufcmatk@with tweaked keys (EUF-CMA-TK)})} if for all \ppt adversaries $\adv$:
   \[
     \advantage{EUF-CMA-TK}{\adv, \algo{Sig}, \algo{TwSch}} \defeq \pr{\game{\Game~\algo{EUF-CMA-TK}}{\algo{Sig}, \algo{TwSch}} = 1} = \negl
   \]
@@ -143,18 +143,18 @@ The proof is left as an exercise (see \autoref{ex:schnorrkp-to-single}).
 \fi
 
 \begin{exercise}\label{ex:schnorrsig-euf-cma-tk-attack}
-  Give a \ppt adversary that breaks the EUF-CMA-TK security of $\algo{SchnorrSig}$ with the $\algo{SchnorrTS}$ tweaking scheme. Hints:
+  Give a \ppt adversary that breaks the EUF-CMA\index{eufcma security@EUF-CMA security}-TK\index{eufcma security@EUF-CMA security!with tweaked keys eufcmatk@with tweaked keys (EUF-CMA-TK)} security of $\algo{SchnorrSig}$ with the $\algo{SchnorrTS}$ tweaking\index{key tweaking@Key tweaking} scheme\index{key tweaking@Key tweaking!tweaking scheme@tweaking scheme}. Hints:
   \begin{itemize}
-    \item $\algo{SchnorrSig}$ does not use key prefixing.
-    \item You only need to use the signing oracle once.
+    \item $\algo{SchnorrSig}$ does not use key prefixing\index{key prefixing@Key prefixing}\index{schnorr signature@Schnorr signature!with key prefixing@with key prefixing}.
+    \item You only need to use the signing oracle\index{oracle@Oracle!signing oracle@signing oracle} once.
     \item For simplicity, use tweaks $t_0 = (0, 1)$ and $t_1 = (1, 1)$.
-    \item Look at the Schnorr verification equation for a signature $(R, s)$ under public key $\algo{TwPK}(X, t_0)$. Compute $s'$ by adding a value to $s$ such that $(R, s')$ is a valid signature for $\algo{TwPK}(X, t_1)$.
+    \item Look at the Schnorr\index{schnorr signature@Schnorr signature} verification equation for a signature $(R, s)$ under public key $\algo{TwPK}(X, t_0)$. Compute $s'$ by adding a value to $s$ such that $(R, s')$ is a valid signature for $\algo{TwPK}(X, t_1)$.
   \end{itemize}
 \end{exercise}
 
 \ifsolutions
 \begin{mysolution}
-  The adversary $\adv$ that breaks EUF-CMA-TK security is shown in Figure~\ref{fig:adversary-euf-cma-tk}.
+  The adversary $\adv$ that breaks EUF-CMA\index{eufcma security@EUF-CMA security}-TK\index{eufcma security@EUF-CMA security!with tweaked keys eufcmatk@with tweaked keys (EUF-CMA-TK)} security is shown in Figure~\ref{fig:adversary-euf-cma-tk}.
 
   \begin{figure}[htb]
     \begin{center}
@@ -178,9 +178,9 @@ The proof is left as an exercise (see \autoref{ex:schnorrkp-to-single}).
 
   \emph{Why this attack succeeds:}
   
-  When querying the signing oracle with $t_0 = (0, 1)$:
+  When querying the signing oracle\index{oracle@Oracle!signing oracle@signing oracle} with $t_0 = (0, 1)$:
   \begin{itemize}
-    \item The tweaked public key is $\algo{TwPK}(X, (0, 1)) = g^0 \cdot X^1 = X$ (the original key).
+    \item The tweaked\index{key tweaking@Key tweaking} public key is $\algo{TwPK}(X, (0, 1)) = g^0 \cdot X^1 = X$ (the original key).
     \item The signature $(R, s)$ satisfies: $g^s = R \cdot X^c$ where $c = \algo{H}(R, m)$.
   \end{itemize}
   
@@ -203,40 +203,40 @@ The proof is left as an exercise (see \autoref{ex:schnorrkp-to-single}).
 \fi
 
 \begin{exercise}
-  Explain why we cannot directly apply the EUF-CMA security proof of $\algo{SchnorrSig}$ to prove EUF-CMA-TK security for $\algo{SchnorrSig}$ with SchnorrTS tweaking.
+  Explain why we cannot directly apply the EUF-CMA\index{eufcma security@EUF-CMA security} security proof of $\algo{SchnorrSig}$ to prove EUF-CMA-TK\index{eufcma security@EUF-CMA security!with tweaked keys eufcmatk@with tweaked keys (EUF-CMA-TK)} security for $\algo{SchnorrSig}$ with SchnorrTS\index{key tweaking@Key tweaking!schnorrts@SchnorrTS}\index{schnorr signature@Schnorr signature}\index{schnorr signature@Schnorr signature!with key tweaking@with key tweaking} tweaking\index{key tweaking@Key tweaking}.
   
-  Hint: Examine what Lemma~\ref{lem:schnorr-to-single} guarantees about $\cdv$'s output and why this guarantee holds. Then consider whether a similar guarantee could be established for a reduction $\cdv'$ that uses an adversary $\adv$ breaking EUF-CMA-TK for $\algo{SchnorrSig}$ with SchnorrTS. Consider specifically the adversary from \autoref{ex:schnorrsig-euf-cma-tk-attack}.
+  Hint: Examine what Lemma~\ref{lem:schnorr-to-single} guarantees about $\cdv$'s output and why this guarantee holds. Then consider whether a similar guarantee could be established for a reduction\index{reduction@Reduction} $\cdv'$ that uses an adversary $\adv$ breaking EUF-CMA-TK for $\algo{SchnorrSig}$ with SchnorrTS. Consider specifically the adversary from \autoref{ex:schnorrsig-euf-cma-tk-attack}.
 \end{exercise}
 
 \ifsolutions
 \begin{mysolution}
-  The EUF-CMA security proof for $\algo{SchnorrSig}$ (Lemma~\ref{lem:schnorr-to-single}) requires that when the reduction algorithm $\cdv$ outputs $(z, \mathit{aux})$ with $z = (R^*, m^*)$ and $\mathit{aux} = s^*$, we have:
+  The EUF-CMA\index{eufcma security@EUF-CMA security} security proof for $\algo{SchnorrSig}$ (Lemma~\ref{lem:schnorr-to-single}) requires that when the reduction\index{reduction@Reduction} algorithm $\cdv$ outputs $(z, \mathit{aux})$ with $z = (R^*, m^*)$ and $\mathit{aux} = s^*$, we have:
   \[
     g^{s^*} = R^* \cdot X^{\algo{H}(R^*, m^*)}
   \]
   
-  The proof of this property relies on showing that the programmed oracle value $T[R^*, m^*]$ equals the external oracle $\algo{H}(R^*, m^*)$.
+  The proof of this property relies on showing that the programmed\index{programmable random oracle@Programmable random oracle} oracle value $T[R^*, m^*]$ equals the external oracle $\algo{H}(R^*, m^*)$.
   This is proven by contradiction: if they differ, then $T[R^*, m^*]$ must have been set during a signing query, which means $m^* \in \mathcal{Q}$.
   But the reduction asserts $m^* \notin \mathcal{Q}$, giving us the contradiction.
   
-  In the EUF-CMA-TK setting, this proof breaks down:
+  In the EUF-CMA-TK\index{eufcma security@EUF-CMA security!with tweaked keys eufcmatk@with tweaked keys (EUF-CMA-TK)} setting, this proof breaks down:
   \begin{itemize}
-    \item The adversary outputs $(m^*, t^*, \sigma^*)$ for some tweak $t^*$.
+    \item The adversary outputs $(m^*, t^*, \sigma^*)$ for some tweak\index{key tweaking@Key tweaking} $t^*$.
     \item The winning condition checks $(m^*, t^*) \notin \mathcal{Q}$, not $m^* \notin \mathcal{Q}$.
-    \item This means the adversary could have queried the signing oracle with $m^*$ with a different tweak $t' \neq t^*$.
+    \item This means the adversary could have queried the signing oracle\index{oracle@Oracle!signing oracle@signing oracle} with $m^*$ with a different tweak $t' \neq t^*$.
     \item Consider the adversary from \autoref{ex:schnorrsig-euf-cma-tk-attack}: it queries the signing oracle with $(m, t_0 = (0,1))$ and forges on $(m, t^* = (1,1))$, reusing the same $R$ from the signature.
     \item When such an adversary queries $m$ with tweak $t'$, the reduction sets $T[R, m]$ to a random value. If the adversary's forgery reuses this $R$ with a different tweak $t^*$, then $T[R^*, m^*]$ has already been assigned, and it is unequal to $\algo{H}(R^*, m^*)$ with overwhelming probability.
   \end{itemize}
   
-  Since $\algo{H}_{\cdv}(R^*, m^*) \neq \algo{H}(R^*, m^*)$ (with overwhelming probability), we cannot use the forking lemma's guarantee that $\algo{H}(R^*, m^*) \neq \algo{H}'(R^*, m^*)$ to extract the secret key from the two signatures.
+  Since $\algo{H}_{\cdv}(R^*, m^*) \neq \algo{H}(R^*, m^*)$ (with overwhelming probability), we cannot use the forking lemma\index{forking lemma@Forking lemma}'s guarantee that $\algo{H}(R^*, m^*) \neq \algo{H}'(R^*, m^*)$ to extract the secret key from the two signatures.
 \end{mysolution}
 \fi
 
 \begin{exercise}\label{ex:schnorrkp-to-single}
-  Prove the following lemma, which is an adaptation of Lemma~\ref{lem:schnorr-to-single} for the EUF-CMA-TK security of $\algo{SchnorrSigKP}$ with SchnorrTS.
+  Prove the following lemma, which is an adaptation of Lemma~\ref{lem:schnorr-to-single} for the EUF-CMA\index{eufcma security@EUF-CMA security}-TK\index{eufcma security@EUF-CMA security!with tweaked keys eufcmatk@with tweaked keys (EUF-CMA-TK)} security of $\algo{SchnorrSigKP}$ with SchnorrTS\index{key tweaking@Key tweaking!schnorrts@SchnorrTS}\index{schnorr signature@Schnorr signature}\index{schnorr signature@Schnorr signature!with key tweaking@with key tweaking}.
   
   \begin{lemma}\label{lem:schnorrkp-to-single}
-    Let $\adv$ be an adversary against the EUF-CMA-TK security of $\algo{SchnorrSigKP}$ with SchnorrTS$[\grgen, \algo{H}]$ in the random oracle model for $\algo{H}$ making at most $q_s$ queries to $\pcoracle{Sign}$ and at most $q_h$ queries to $\algo{H}$.
+    Let $\adv$ be an adversary against the EUF-CMA-TK security of $\algo{SchnorrSigKP}$ with SchnorrTS$[\grgen, \algo{H}]$ in the random oracle\index{random oracle@Random oracle} model\index{random oracle model rom@Random oracle model (ROM)} for $\algo{H}$ making at most $q_s$ queries to $\pcoracle{Sign}$ and at most $q_h$ queries to $\algo{H}$.
     
     Let $\algo{InpGen}$ be the algorithm which on input $1^\secpar$ runs $(\GG, p, g) \gets \grgen(1^\secpar)$, draws $X \sample \GG$, and returns $((\GG, p, g), X)$.
     
@@ -244,7 +244,7 @@ The proof is left as an exercise (see \autoref{ex:schnorrkp-to-single}).
     \[
       \left|\advantage{Single}{\cdv, \algo{InpGen}} - \advantage{EUF-CMA-TK}{\adv, \algo{SchnorrSigKP}, \algo{SchnorrTS}}\right| \leq \frac{q_s(q_s + q_h)}{2^{\secpar-1}}
     \]
-    with $\advantage{Single}{\cdv, \algo{InpGen}}$ as defined in the forking lemma (Lemma~\ref{lem:fork}).
+    with $\advantage{Single}{\cdv, \algo{InpGen}}$ as defined in the forking lemma\index{forking lemma@Forking lemma} (Lemma~\ref{lem:fork}).
     
     Moreover, when $\cdv$ succeeds (returns $(z, \mathit{aux})$ for some $(z, \mathit{aux})$), then $z = (R^*, \algo{TwPK}(X, t^*), m^*, t^*)$, $\mathit{aux} = s^*$, and
     \[
@@ -254,12 +254,12 @@ The proof is left as an exercise (see \autoref{ex:schnorrkp-to-single}).
   
   Adapt the proof of Lemma~\ref{lem:schnorr-to-single} to prove this lemma.
   
-  \emph{Note:} Applying the forking lemma to $\cdv$ would allow extracting the discrete logarithm via $g^{s_1 - s_2} = (g^\alpha \cdot X^\beta)^{h_1 - h_2}$ where $(\alpha, \beta) = t^*$, thus establishing the EUF-CMA-TK security of $\algo{SchnorrSigKP}$ with SchnorrTS.
+  \emph{Note:} Applying the forking lemma to $\cdv$ would allow extracting the discrete logarithm\index{discrete logarithm dl@Discrete logarithm (DL)} via $g^{s_1 - s_2} = (g^\alpha \cdot X^\beta)^{h_1 - h_2}$ where $(\alpha, \beta) = t^*$, thus establishing the EUF-CMA-TK security of $\algo{SchnorrSigKP}$ with SchnorrTS.
 \end{exercise}
 
 \ifsolutions
 \begin{mysolution}
-  We adapt the proof of Lemma~\ref{lem:schnorr-to-single} by modifying the games to handle tweaking and key prefixing.
+  We adapt the proof of Lemma~\ref{lem:schnorr-to-single} by modifying the games to handle tweaking\index{key tweaking@Key tweaking} and key prefixing\index{key prefixing@Key prefixing}\index{schnorr signature@Schnorr signature!with key prefixing@with key prefixing}.
   
   \begin{figure}[htbp]
     \begin{center}
@@ -394,7 +394,7 @@ The proof is left as an exercise (see \autoref{ex:schnorrkp-to-single}).
   Since $T[R^*, \tilde{X}^*, m^*]$ was set, there must exist some signing query where the key for $T$ was $(R^*, \tilde{X}^*, m^*)$.
   This means $R = R^*$, $\tilde{X} = \tilde{X}^*$, and $m = m^*$ for that query.
   From $\tilde{X} = \tilde{X}^*$ and $\tilde{X} = \algo{TwPK}(X, t)$, $\tilde{X}^* = \algo{TwPK}(X, t^*)$, we have $\algo{TwPK}(X, t) = \algo{TwPK}(X, t^*)$.
-  If $t \neq t^*$, then $\cdv$ would have detected this collision and directly extracted the discrete logarithm.
+  If $t \neq t^*$, then $\cdv$ would have detected this collision and directly extracted the discrete logarithm\index{discrete logarithm dl@Discrete logarithm (DL)}.
   Otherwise $t = t^*$, so $(m^*, t^*) = (m, t) \in \mathcal{Q}$.
   However, $\cdv$ asserts that $(m^*, t^*) \notin \mathcal{Q}$, which is a contradiction.
   Thus $c^* = \algo{H}(R^*, \tilde{X}^*, m^*)$.
@@ -404,18 +404,18 @@ The proof is left as an exercise (see \autoref{ex:schnorrkp-to-single}).
   If $\beta = \beta^*$, then $\alpha = \alpha^*$, contradicting $t \neq t^*$.
   Thus $\beta \neq \beta^*$ and we can extract $x = (\alpha^* - \alpha)/(\beta - \beta^*) \bmod p$.
   
-  The bound $|\advantage{Single}{\cdv, \algo{InpGen}} - \advantage{EUF-CMA-TK}{\adv, \algo{SchnorrSigKP}, \algo{SchnorrTS}}| \leq \frac{q_s(q_s + q_h)}{2^{\secpar-1}}$ follows from the same analysis as in Lemma~\ref{lem:schnorr-to-single}, where the error term accounts for the probability of collisions in the programmed oracle.
+  The bound $|\advantage{Single}{\cdv, \algo{InpGen}} - \advantage{EUF-CMA-TK}{\adv, \algo{SchnorrSigKP}, \algo{SchnorrTS}}| \leq \frac{q_s(q_s + q_h)}{2^{\secpar-1}}$ follows from the same analysis as in Lemma~\ref{lem:schnorr-to-single}, where the error term accounts for the probability of collisions in the programmed\index{programmable random oracle@Programmable random oracle} oracle.
 \end{mysolution}
 \fi
 
 \begin{exercise}[Optional]
-  The security model of the MuSig2 multisignature scheme~\cite{C:NicRufSeu21} does not take key tweaking into account.
+  The security model of the MuSig\index{multisignature@Multi-signature!musig@MuSig}2 multisignature\index{multisignature@Multi-signature} scheme\index{signature scheme@Signature scheme}~\cite{C:NicRufSeu21} does not take key tweaking\index{key tweaking@Key tweaking} into account.
   However, the BIP MuSig2 specification~\cite{add:bip-musig2} allows for tweaking individual keys (see ``Signing with Tweaked Individual Keys'').
   What problem occurs when using tweaked keys with ``vanilla'' MuSig2 and how was it fixed?
 \end{exercise}
 
 \begin{exercise}[Optional]
   Read about signatures with re-randomizable keys in Section 3 of Fleischhacker et al.~\cite{PKC:FKMSSS16}, which presents a notion closely related to key tweaking.
-  Compare their security model with the EUF-CMA-TK model discussed in this section and discuss the practical impact.
-  How can they prove security for Schnorr signatures with re-randomized keys without requiring public key prefixing?
+  Compare their security model with the EUF-CMA\index{eufcma security@EUF-CMA security}-TK\index{eufcma security@EUF-CMA security!with tweaked keys eufcmatk@with tweaked keys (EUF-CMA-TK)} model discussed in this section and discuss the practical impact.
+  How can they prove security for Schnorr\index{schnorr signature@Schnorr signature} signatures with re-randomized keys without requiring public key prefixing\index{key prefixing@Key prefixing}\index{schnorr signature@Schnorr signature!with key prefixing@with key prefixing}?
 \end{exercise}
